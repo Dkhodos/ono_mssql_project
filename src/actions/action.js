@@ -12,7 +12,7 @@ export class Action{
     }
 
     async execute(){
-        const filePath = path.resolve(__dirname, "../scripts/", this.#fileName);
+        const filePath = path.resolve(__dirname, "../queries/", this.#fileName);
         const file = await fs.readFile(filePath, 'utf8');
 
         console.log(`## executing ${this.#fileName} ##`);
