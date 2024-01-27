@@ -1,0 +1,19 @@
+{
+  "name": "mssql",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mssql": "^10.0.2",
+    "sql-cli": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.8"
+  }
+}
