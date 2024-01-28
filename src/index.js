@@ -1,11 +1,11 @@
 import {dbConfig} from './dbConfig.js';
 import SqlServer from "./sqlServer/index.js";
-import {startDockerDB} from "./processes/startDockerDB.js";
-import {stopDockerDB} from "./processes/stopDockerDB.js";
 import {SqlAction} from "./sqlServer/sqlAction.js";
+import {DockerProcess} from "./processes/dockerProcess.js";
 
 async function main() {
-    await startDockerDB();
+    const dockerProcess = new DockerProcess();
+    await dockerProcess.startDockerDB();
 
     const sqlServer = new SqlServer(dbConfig);
     await sqlServer.connect();
@@ -28,7 +28,7 @@ async function main() {
         console.error('Error:', err);
     } finally {
         await sqlServer.disconnect();
-        await stopDockerDB();
+        await dockerProcess.stopDockerDB();
         console.log("All Done :)")
     }
 }

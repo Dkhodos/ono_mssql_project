@@ -8,7 +8,19 @@ export default class SqlServer {
         });
     }
 
-    async connect() {
+    async execute(query) {
+        try {
+            await this.#connect();
+            return await this.pool.request().query(query);
+        } catch (err) {
+            console.error('Error executing query:', err);
+            throw err;
+        } finally {
+            await this.#disconnect()
+        }
+    }
+
+    async #connect() {
         try {
             await this.pool.connect();
             console.log('Connected to SQL Server');
@@ -18,19 +30,7 @@ export default class SqlServer {
         }
     }
 
-    async execute(query) {
-        try {
-            await this.connect();
-            return await this.pool.request().query(query);
-        } catch (err) {
-            console.error('Error executing query:', err);
-            throw err;
-        } finally {
-            this.pool.close();
-        }
-    }
-
-    async disconnect() {
+    async #disconnect() {
         try {
             await this.pool.close();
             console.log('Disconnected from SQL Server');

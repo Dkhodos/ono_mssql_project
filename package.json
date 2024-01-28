@@ -5,7 +5,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "test:ui": "vitest --ui",
+    "dev": "node src/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +16,8 @@
     "sql-cli": "^0.6.2"
   },
   "devDependencies": {
-    "@types/node": "^20.11.8"
+    "@types/node": "^20.11.8",
+    "@vitest/ui": "^1.2.2",
+    "vitest": "0.34.*"
   }
 }

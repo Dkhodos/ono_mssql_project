@@ -313,8 +313,9 @@ DROP TABLE IF EXISTS Recommendations;
 DROP TABLE IF EXISTS Media;
 
 -- Then drop the primary tables
-DROP TABLE IF EXISTS Users;
 DROP TABLE IF EXISTS Content;
 DROP TABLE IF EXISTS Tags;
 DROP TABLE IF EXISTS Segments;
+DROP TABLE IF EXISTS Users;
+
 ```
