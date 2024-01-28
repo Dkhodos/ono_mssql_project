@@ -74,5 +74,54 @@ describe("Test SQL Inset data", () => {
             expect(result['recordset'][i]['text']).toStrictEqual(expected[i]['text']);
             expect(result['recordset'][i]['external_link']).toStrictEqual(expected[i]['external_link']);
         }
-    })
+    });
+
+    test("Insert 3 new Interactions: create-interactions.sql", async () => {
+        const expected = [
+              {
+                user_id: '44A4BB81-DEFF-41BC-AF2B-FAA964EDC965',
+                content_id: 'AAAC36FF-62B4-463F-8521-259D840A9D6D',
+                type: 'Like',
+                content: null,
+                source: 'discovery',
+                time_spent: '0',
+              },
+              {
+                user_id: '44A4BB81-DEFF-41BC-AF2B-FAA964EDC965',
+                content_id: 'AAAC36FF-62B4-463F-8521-259D840A9D6D',
+                type: 'Share',
+                content: null,
+                source: 'discovery',
+                time_spent: '0',
+              },
+              {
+                user_id: 'ECE7C609-7316-48A1-8719-A223B2F4EB3B',
+                content_id: 'AAAC36FF-62B4-463F-8521-259D840A9D6D',
+                type: 'Comment',
+                content: 'Great tips on martial arts!',
+                source: 'discovery',
+                time_spent: '120',
+              }
+        ];
+
+        const sqlServer = new SqlServer(dbConfig);
+        const userCreationAction = new SqlAction(sqlServer, "create-users.sql");
+        await userCreationAction.execute();
+
+        const contentCreationAction = new SqlAction(sqlServer, "create-content.sql");
+        await contentCreationAction.execute();
+
+        const interactionsCreationAction = new SqlAction(sqlServer, "create-interactions.sql");
+        await interactionsCreationAction.execute();
+
+        const result = await sqlServer.execute('SELECT * FROM Interactions');
+        for (let i = 0; i < expected.length; i++) {
+            expect(result['recordset'][i]['user_id']).toStrictEqual(expected[i]['user_id']);
+            expect(result['recordset'][i]['content_id']).toStrictEqual(expected[i]['content_id']);
+            expect(result['recordset'][i]['type']).toStrictEqual(expected[i]['type']);
+            expect(result['recordset'][i]['content']).toStrictEqual(expected[i]['content']);
+            expect(result['recordset'][i]['source']).toStrictEqual(expected[i]['source']);
+            expect(result['recordset'][i]['time_spent']).toStrictEqual(expected[i]['time_spent']);
+        }
+    });
 })

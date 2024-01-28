@@ -5,10 +5,9 @@ export default defineConfig({
       globals: true,
       testTimeout: 100000,
       hookTimeout: 100000,
-      silent: true,
       restoreMocks: true,
       clearMocks: true,
       watch: false,
-      setupFiles: ['src/testSetup.js']
+      setupFiles: ['src/testSetup.js'],
   },
 })
