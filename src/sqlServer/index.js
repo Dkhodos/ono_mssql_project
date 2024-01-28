@@ -1,8 +1,18 @@
 import sql from 'mssql';
 
+export const dbConfig = {
+    user: 'sa',
+    password: 'Admin123@@',
+    server: 'localhost',
+    database: 'master', // connecting to the master database
+    options: {
+        trustServerCertificate: true // required for self-signed certificates
+    }
+};
+
 export default class SqlServer {
-    constructor(config) {
-        this.pool = new sql.ConnectionPool(config);
+    constructor() {
+        this.pool = new sql.ConnectionPool(dbConfig);
         this.pool.on('error', err => {
             console.error('SQL Pool Error:', err);
         });

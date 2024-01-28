@@ -1,4 +1,3 @@
-import {dbConfig} from './dbConfig.js';
 import SqlServer from "./sqlServer/index.js";
 import {SqlAction} from "./sqlServer/sqlAction.js";
 import {DockerProcess} from "./processes/dockerProcess.js";
@@ -7,8 +6,7 @@ async function main() {
     const dockerProcess = new DockerProcess();
     await dockerProcess.startDockerDB();
 
-    const sqlServer = new SqlServer(dbConfig);
-    await sqlServer.connect();
+    const sqlServer = new SqlServer();
 
     try {
         console.log("## start docker azure DB##")
@@ -27,7 +25,6 @@ async function main() {
     } catch (err) {
         console.error('Error:', err);
     } finally {
-        await sqlServer.disconnect();
         await dockerProcess.stopDockerDB();
         console.log("All Done :)")
     }

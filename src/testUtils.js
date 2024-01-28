@@ -1,7 +1,6 @@
 import {DockerProcess} from "./processes/dockerProcess.js";
 import SqlServer from "./sqlServer/index.js";
 import {SqlAction} from "./sqlServer/sqlAction.js";
-import {dbConfig} from "./dbConfig.js";
 import fs from 'fs/promises'
 
 
@@ -19,7 +18,7 @@ export const TestUtils = {
     },
 
     initSqlDB: async () => {
-        const sqlServer = new SqlServer(dbConfig);
+        const sqlServer = new SqlServer();
         const initAction = new SqlAction(sqlServer, "init-db.sql");
         await initAction.execute();
     },
@@ -34,7 +33,7 @@ export const TestUtils = {
     },
 
     clearSqlDb: async () => {
-        const sqlServer = new SqlServer(dbConfig);
+        const sqlServer = new SqlServer();
         const action = new SqlAction(sqlServer,"drop-tables.sql");
         await action.execute();
     }

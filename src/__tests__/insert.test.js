@@ -1,9 +1,8 @@
 import {SqlAction} from "../sqlServer/sqlAction.js";
 import SqlServer from "../sqlServer/index.js";
-import {dbConfig} from "../dbConfig.js";
 describe("Test SQL Inset data", () => {
     test("Insert 3 new Users: create-users.sql", async () => {
-        const sqlServer = new SqlServer(dbConfig);
+        const sqlServer = new SqlServer();
         const expected = [
             {
               id: 'A20D6D3F-6989-4943-8112-9A8FFCC86280',
@@ -59,7 +58,7 @@ describe("Test SQL Inset data", () => {
             }
         ];
 
-        const sqlServer = new SqlServer(dbConfig);
+        const sqlServer = new SqlServer();
         const userCreationAction = new SqlAction(sqlServer, "create-users.sql");
         await userCreationAction.execute();
 
@@ -104,7 +103,7 @@ describe("Test SQL Inset data", () => {
               }
         ];
 
-        const sqlServer = new SqlServer(dbConfig);
+        const sqlServer = new SqlServer();
         const userCreationAction = new SqlAction(sqlServer, "create-users.sql");
         await userCreationAction.execute();
 
