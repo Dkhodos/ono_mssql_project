@@ -1,7 +1,6 @@
 import {DockerProcess} from "./processes/dockerProcess.js";
 import SqlServer from "./sqlServer/sqlServer.js";
 import {SqlAction} from "./sqlServer/sqlAction.js";
-import fs from 'fs/promises'
 
 
 const dockerProcess = DockerProcess.getInstance();
@@ -19,8 +18,10 @@ export const TestUtils = {
 
     initSqlDB: async () => {
         const sqlServer = new SqlServer();
+        await sqlServer.generateDB();
         const initAction = new SqlAction(sqlServer, "init-db.sql");
         await initAction.execute();
+        return sqlServer;
     },
 
     destroySqlDb: async () => {
@@ -34,7 +35,8 @@ export const TestUtils = {
 
     clearSqlDb: async () => {
         const sqlServer = new SqlServer();
-        const action = new SqlAction(sqlServer,"drop-tables.sql");
+        const action = new SqlAction(sqlServer,"clear-db.sql");
         await action.execute();
+        await sqlServer.dropDatabase()
     }
 }

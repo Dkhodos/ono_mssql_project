@@ -1,6 +1,12 @@
-import SqlServer from "../sqlServer/sqlServer.js";
+import {TestUtils} from "../testUtils.js";
 
 describe("Test SQL init data", () => {
+    let sqlServer;
+
+    beforeEach(async () => {
+        sqlServer = await TestUtils.initSqlDB();
+    });
+
     test.each([
         'Users',
         'Tags',
@@ -13,7 +19,6 @@ describe("Test SQL init data", () => {
         'Segment_Users',
         'Recommendations'
     ])("Test init for: %s", async (tableName) => {
-        const sqlServer = new SqlServer();
         const result = await sqlServer.execute(`SELECT * FROM ${tableName}`);
         expect(result['recordset'].length).toBe(0)
     });

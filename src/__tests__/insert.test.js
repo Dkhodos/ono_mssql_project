@@ -1,8 +1,13 @@
 import {SqlAction} from "../sqlServer/sqlAction.js";
-import SqlServer from "../sqlServer/sqlServer.js";
+import {TestUtils} from "../testUtils.js";
 describe("Test SQL Inset data", () => {
+    let sqlServer;
+
+    beforeEach(async () => {
+        sqlServer = await TestUtils.initSqlDB();
+    });
+
     test("Insert 3 new Users: create-users.sql", async () => {
-        const sqlServer = new SqlServer();
         const expected = [
             {
               id: 'A20D6D3F-6989-4943-8112-9A8FFCC86280',
@@ -58,7 +63,6 @@ describe("Test SQL Inset data", () => {
             }
         ];
 
-        const sqlServer = new SqlServer();
         const userCreationAction = new SqlAction(sqlServer, "create-users.sql");
         await userCreationAction.execute();
 
@@ -103,7 +107,6 @@ describe("Test SQL Inset data", () => {
               }
         ];
 
-        const sqlServer = new SqlServer();
         const userCreationAction = new SqlAction(sqlServer, "create-users.sql");
         await userCreationAction.execute();
 

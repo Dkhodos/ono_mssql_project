@@ -1,4 +1,6 @@
 import sql from 'mssql';
+import {randomUUID} from "crypto";
+import {sleep} from "../utils/sleep.js";
 
 export const dbConfig = {
     user: 'sa',
@@ -11,19 +13,28 @@ export const dbConfig = {
 };
 
 export default class SqlServer {
+    static #dbNumber = 0;
+
+    #dbName;
+    #pool
     constructor() {
-        this.pool = new sql.ConnectionPool(dbConfig);
-        this.pool.on('error', err => {
+        this.#pool = new sql.ConnectionPool(dbConfig);
+        this.#pool.on('error', err => {
             console.error('SQL Pool Error:', err);
         });
     }
 
     async execute(query) {
+        let transaction;
         try {
             await this.#connect();
-            return await this.pool.request().query(query);
+            transaction = await this.#beginTransaction();
+            const result = await this.#pool.request().query(query);
+            await this.#commitTransaction(transaction);
+            return result;
         } catch (err) {
             console.error('Error executing query:', err);
+            if(transaction) await this.#rollbackTransaction(transaction)
             throw err;
         } finally {
             await this.#disconnect()
@@ -32,7 +43,7 @@ export default class SqlServer {
 
     async #connect() {
         try {
-            await this.pool.connect();
+            await this.#pool.connect();
             console.log('Connected to SQL Server');
         } catch (err) {
             console.error('Error connecting to SQL Server:', err);
@@ -42,11 +53,51 @@ export default class SqlServer {
 
     async #disconnect() {
         try {
-            await this.pool.close();
+            await this.#pool.close();
             console.log('Disconnected from SQL Server');
         } catch (err) {
             console.error('Error disconnecting from SQL Server:', err);
             throw err;
         }
+    }
+
+    async generateDB() {
+        this.#dbName = this.#getNewDBName();
+        await this.#createDatabase();
+        await this.#useDatabase();
+    }
+
+    async #createDatabase() {
+        await this.execute(`CREATE DATABASE ${this.#dbName}`);
+    }
+
+    async dropDatabase() {
+        await this.execute(`DROP DATABASE ${this.#dbName}`);
+    }
+
+    async #useDatabase() {
+        this.#pool = new sql.ConnectionPool({
+            ...dbConfig,
+            database: this.#dbName,
+        });
+    }
+
+    #getNewDBName(){
+        SqlServer.#dbNumber += 1;
+        return `db_${SqlServer.#dbNumber}`;
+    }
+
+    async #beginTransaction() {
+        const transaction = new sql.Transaction(this.#pool);
+        await transaction.begin();
+        return transaction;
+    }
+
+    async #commitTransaction(transaction) {
+        await transaction.commit();
+    }
+
+    async #rollbackTransaction(transaction) {
+        await transaction.rollback();
     }
 }
