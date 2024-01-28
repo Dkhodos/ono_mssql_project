@@ -6,7 +6,6 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest run",
-    "test:ui": "vitest --ui",
     "dev": "node src/index.js"
   },
   "author": "",

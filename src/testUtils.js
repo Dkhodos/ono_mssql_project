@@ -3,7 +3,7 @@ import SqlServer from "./sqlServer/sqlServer.js";
 import {SqlAction} from "./sqlServer/sqlAction.js";
 
 
-const dockerProcess = DockerProcess.getInstance();
+const dockerProcess = new DockerProcess();
 
 export const TestUtils = {
     startDB: async () => {
@@ -32,11 +32,4 @@ export const TestUtils = {
             throw new Error(e)
         }
     },
-
-    clearSqlDb: async () => {
-        const sqlServer = new SqlServer();
-        const action = new SqlAction(sqlServer,"clear-db.sql");
-        await action.execute();
-        await sqlServer.dropDatabase()
-    }
 }
