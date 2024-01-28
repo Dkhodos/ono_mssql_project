@@ -36,9 +36,9 @@ export class DockerProcess{
         if(this.#status !== DockerActionStatus.idle) return;
 
         console.warn("Docker service is up, restarting...")
-        this.#status = DockerActionStatus.running;
-        await this.#startDockerDB();
         this.#status = DockerActionStatus.starting;
+        await this.#startDockerDB();
+        this.#status = DockerActionStatus.running;
     }
 
     async #startDockerDB(){

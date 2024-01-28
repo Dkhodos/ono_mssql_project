@@ -1,4 +1,4 @@
-import SqlServer from "../sqlServer/index.js";
+import SqlServer from "../sqlServer/sqlServer.js";
 
 describe("Test SQL init data", () => {
     test.each([

@@ -1,5 +1,5 @@
 import {SqlAction} from "../sqlServer/sqlAction.js";
-import SqlServer from "../sqlServer/index.js";
+import SqlServer from "../sqlServer/sqlServer.js";
 describe("Test SQL Inset data", () => {
     test("Insert 3 new Users: create-users.sql", async () => {
         const sqlServer = new SqlServer();

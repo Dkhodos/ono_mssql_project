@@ -1,5 +1,5 @@
 import {DockerProcess} from "./processes/dockerProcess.js";
-import SqlServer from "./sqlServer/index.js";
+import SqlServer from "./sqlServer/sqlServer.js";
 import {SqlAction} from "./sqlServer/sqlAction.js";
 import fs from 'fs/promises'
 
