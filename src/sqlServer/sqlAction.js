@@ -3,7 +3,7 @@ import * as path from 'path'
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-export class Action{
+export class SqlAction {
     #fileName;
     #sqlServer;
     constructor(sqlServer, fileName) {

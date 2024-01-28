@@ -1,8 +1,8 @@
 import {dbConfig} from './dbConfig.js';
-import {Action} from "./actions/action.js";
 import SqlServer from "./sqlServer/index.js";
 import {startDockerDB} from "./processes/startDockerDB.js";
 import {stopDockerDB} from "./processes/stopDockerDB.js";
+import {SqlAction} from "./sqlServer/sqlAction.js";
 
 async function main() {
     await startDockerDB();
@@ -14,11 +14,11 @@ async function main() {
         console.log("## start docker azure DB##")
 
         console.log("## Initialize data base ##");
-        const initAction = new Action(sqlServer, "init-db.sql");
+        const initAction = new SqlAction(sqlServer, "init-db.sql");
         await initAction.execute();
 
         console.log("## Create 3 users ##")
-        const userCreationAction = new Action(sqlServer, "create-users.sql");
+        const userCreationAction = new SqlAction(sqlServer, "create-users.sql");
         await userCreationAction.execute();
 
         const result = await sqlServer.execute('SELECT * FROM Users');
