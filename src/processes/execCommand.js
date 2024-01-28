@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 
-const IGNORE_ERROR_IN = ['warning', 'Creating'];
+const IGNORE_ERROR_IN = ['warning', 'Creating', "Network", 'Container'];
 
 const isFakeError = (message) => {
     if(!message) return true;
@@ -16,20 +16,30 @@ const isFakeError = (message) => {
 
 export function execCommand(command) {
     return new Promise((resolve, reject) => {
-        exec(command, (error, stdout, stderr) => {
-            if(isFakeError(stderr) || isFakeError(error)){
-                resolve(stdout);
-            }
+        const childProcess = exec(command);
 
-            if (error) {
-                reject(`error: ${error.message}`);
-                return;
+        // Listen for data from the child process's stdout
+        childProcess.stdout.on('data', (data) => {
+            console.log(data);
+        });
+
+        // Listen for data from the child process's stderr
+        childProcess.stderr.on('data', (data) => {
+            if (!isFakeError(data)) {
+                console.log(data);
             }
-            if (stderr) {
-                reject(`stderr: ${stderr}`);
-                return;
+        });
+
+        childProcess.on('close', (code) => {
+            if (code === 0) {
+                resolve();
+            } else {
+                reject(`Child process exited with code ${code}`);
             }
-            resolve(stdout);
+        });
+
+        childProcess.on('error', (error) => {
+            reject(`Child process error: ${error.message}`);
         });
     });
 }
