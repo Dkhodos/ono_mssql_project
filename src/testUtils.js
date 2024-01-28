@@ -4,7 +4,7 @@ import {SqlAction} from "./sqlServer/sqlAction.js";
 import fs from 'fs/promises'
 
 
-const dockerProcess = new DockerProcess();
+const dockerProcess = DockerProcess.getInstance();
 
 export const TestUtils = {
     startDB: async () => {

@@ -3,7 +3,7 @@ import {SqlAction} from "./sqlServer/sqlAction.js";
 import {DockerProcess} from "./processes/dockerProcess.js";
 
 async function main() {
-    const dockerProcess = new DockerProcess();
+    const dockerProcess = DockerProcess.getInstance();
     await dockerProcess.startDockerDB();
 
     const sqlServer = new SqlServer();
