@@ -222,11 +222,12 @@ WHERE friend_count > 10;
 ```sql
 SELECT text
 FROM Content
-WHERE type IN ('Post', 'Ad');
+WHERE type IN ('Post', 'Ad')
+ORDER BY date ;
 ```
-#### Select `date` and `time_spent` from `Interactions` where the source is 'discovery' and `time_spent` is greater than 100
+#### Select `user_id` and `time_spent` from `Interactions` where the source is 'discovery' and `time_spent` is greater than 100
 ```sql
-SELECT date, time_spent
+SELECT user_id, time_spent
 FROM Interactions
 WHERE source = 'discovery' AND time_spent > 100;
 ```
