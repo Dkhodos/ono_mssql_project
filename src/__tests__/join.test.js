@@ -5,12 +5,14 @@ import {Content, ContentGenerator} from "../dataGenerators/ContentGenerator.js";
 import {Interaction, InteractionGenerator} from "../dataGenerators/InteractionGenerator.js";
 import {ContentTag, ContentTagGenerator} from "../dataGenerators/ContentTagGenerator.js";
 import {Tag, TagGenerator} from "../dataGenerators/TagGenerator.js";
+import {Media, MediaGenerator} from "../dataGenerators/MediaGenerator.js";
 describe("SQL Join data", () => {
     const userGenerator = new UserGenerator();
     const contentGenerator = new ContentGenerator();
     const interactionGenerator = new InteractionGenerator();
     const contentTagGenerator = new ContentTagGenerator();
     const tagGenerator = new TagGenerator();
+    const mediaGenerator = new MediaGenerator(); // Assuming this generator exists
 
 
     const userIDs = [
@@ -87,5 +89,54 @@ describe("SQL Join data", () => {
               new Date('2024-01-02'),
         ];
         expect(results['recordset'].map(({date}) => date)).toStrictEqual(expectedDates);
+    });
+
+    test("Select Content Text Where No Corresponding Media", async () => {
+        // Static arrays of Users, Contents, Tags, and ContentTags
+        const users = [
+            new User({ id: userIDs[0] }),
+            new User({ id: userIDs[1] }),
+            new User({ id: userIDs[2] })
+        ];
+
+        const contents = [
+            new Content({id: contentIDs[0], user_id: userIDs[0]}),
+            new Content({id: contentIDs[1], user_id: userIDs[1]}),
+            new Content({id: contentIDs[2], user_id: userIDs[2]})
+        ];
+
+        const tags = [
+            new Tag({id: tagIDs[0], name: "Tag1"}),
+            new Tag({id: tagIDs[1], name: "Tag2"}),
+            new Tag({id: tagIDs[2], name: "Tag3"})
+        ];
+
+        const contentTags = [
+            new ContentTag({ content_id: contentIDs[0], tag_id: tagIDs[0] }),
+            new ContentTag({ content_id: contentIDs[0], tag_id: tagIDs[1] }),
+            new ContentTag({ content_id: contentIDs[1], tag_id: tagIDs[2] }),
+            new ContentTag({ content_id: contentIDs[1], tag_id: tagIDs[1] }),
+            new ContentTag({ content_id: contentIDs[2], tag_id: tagIDs[2] })
+        ];
+
+        // Insert data into the database
+        await sqlServer.execute(userGenerator.generateQuery(users));
+        await sqlServer.execute(contentGenerator.generateQuery(contents));
+        await sqlServer.execute(tagGenerator.generateQuery(tags));
+        await sqlServer.execute(contentTagGenerator.generateQuery(contentTags));
+
+        // Media records - only add to some contents to test the query
+        const mediaRecords = [
+            new Media({ content_id: contentIDs[0], media_type: 'Image', url: 'https://example.com/image1.jpg' }),
+            // Do not add media for contentIDs[1] to test the query
+            new Media({ content_id: contentIDs[2], media_type: 'Video', url: 'https://example.com/video1.mp4' })
+        ];
+        await sqlServer.execute(mediaGenerator.generateQuery(mediaRecords));
+
+        // Execute the SQL query and test
+        const action = new SqlAction(sqlServer, 'select-content-text-no-media.sql');
+        const results = await action.execute();
+        const expectedTexts = [contents[1].text]; // Only the text of the second content should be selected
+        expect(results['recordset'].map(({text}) => text)).toStrictEqual(expectedTexts);
     });
 })
