@@ -25,7 +25,3 @@ jobs:
         run: |
           chmod +x ./run_tests.sh
           ./run_tests.sh
-
-      - name: Append test results to step summary
-        if: success() || failure()
-        run: cat test-report.md >> $GITHUB_STEP_SUMMARY
