@@ -137,3 +137,6 @@ dist
 
 # yarn
 yarn.lock
+
+# vitest
+test-report.md

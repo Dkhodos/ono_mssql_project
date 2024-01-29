@@ -6,16 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      mssql:
-        image: mcr.microsoft.com/azure-sql-edge
-        environment:
-          ACCEPT_EULA: Y
-          SA_PASSWORD: Admin123@@
-          MSSQL_PID: Developer
-        ports:
-          - 1433:1433
-
     strategy:
       matrix:
         node-version: [20.x]
@@ -32,12 +22,18 @@ jobs:
         run: yarn install
 
       - name: Run tests
-        run: yarn test
+        run: |
+          chmod +x ./run_tests.sh
+          ./run_tests.sh
+
+      - name: Append test results to step summary
+        if: success() || failure()
+        run: cat test-report.md >> $GITHUB_STEP_SUMMARY
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: test-results.txt
+          path: test-report.md
           if-no-files-found: ignore
