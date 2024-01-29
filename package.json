@@ -18,9 +18,7 @@
     "mssql": "^10.0.2",
     "sql-cli": "^0.6.2",
     "uuid": "^9.0.1",
-    "vitest": "0.34.*"
-  },
-  "dependencies": {
+    "vitest": "0.34.*",
     "vitest-markdown-reporter": "^0.1.2"
   }
 }

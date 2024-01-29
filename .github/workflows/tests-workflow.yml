@@ -36,3 +36,5 @@ jobs:
         run: |
           chmod +x ./run_tests.sh
           ./run_tests.sh
+        env:
+          CI: true
