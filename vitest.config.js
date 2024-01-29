@@ -13,5 +13,7 @@ export default defineConfig({
       outputFile: {
         markdown: "test-report.md",
       },
+      minThreads: 1,
+      maxThreads: 2
   },
 })

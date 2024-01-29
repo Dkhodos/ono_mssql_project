@@ -29,11 +29,3 @@ jobs:
       - name: Append test results to step summary
         if: success() || failure()
         run: cat test-report.md >> $GITHUB_STEP_SUMMARY
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: test-report.md
-          if-no-files-found: ignore
