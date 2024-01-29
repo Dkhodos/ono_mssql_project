@@ -1,20 +1,9 @@
 import sql from 'mssql';
 import {randomUUID} from "crypto";
-import {sleep} from "../utils/sleep.js";
+import {dbConfig} from "./dbConfig.js";
 
-export const dbConfig = {
-    user: 'sa',
-    password: 'Admin123@@',
-    server: 'localhost',
-    database: 'master', // connecting to the master database
-    options: {
-        trustServerCertificate: true // required for self-signed certificates
-    }
-};
 
 export default class SqlServer {
-    static #dbNumber = 0;
-
     #dbName;
     #pool
     constructor() {
@@ -25,42 +14,14 @@ export default class SqlServer {
     }
 
     async execute(query) {
-        let transaction;
         try {
             await this.#connect();
-            transaction = await this.#beginTransaction();
-            const result = await this.#pool.request().query(query);
-            await this.#commitTransaction(transaction);
-            return result;
+            return await this.#pool.request().query(query);
         } catch (err) {
             console.error('Error executing query:', err);
-            if(transaction) await this.#rollbackTransaction(transaction)
             throw err;
         } finally {
             await this.#disconnect()
-        }
-    }
-
-    async executeAll(queries) {
-        let transaction;
-        try {
-            await this.#connect();
-            transaction = await this.#beginTransaction();
-
-            const results = [];
-            for (const query of queries) {
-                const result = await this.#pool.request().query(query);
-                results.push(result);
-            }
-
-            await this.#commitTransaction(transaction);
-            return results;
-        } catch (err) {
-            console.error('Error executing queries:', err);
-            if (transaction) await this.#rollbackTransaction(transaction);
-            throw err;
-        } finally {
-            await this.#disconnect();
         }
     }
 
@@ -108,19 +69,5 @@ export default class SqlServer {
     #getNewDBName(){
         const postfix = randomUUID().replaceAll("-", "_")
         return `db_${postfix}`;
-    }
-
-    async #beginTransaction() {
-        const transaction = new sql.Transaction(this.#pool);
-        await transaction.begin();
-        return transaction;
-    }
-
-    async #commitTransaction(transaction) {
-        await transaction.commit();
-    }
-
-    async #rollbackTransaction(transaction) {
-        await transaction.rollback();
     }
 }

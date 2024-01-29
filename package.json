@@ -10,15 +10,13 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "mssql": "^10.0.2",
-    "sql-cli": "^0.6.2",
-    "uuid": "^9.0.1"
-  },
   "devDependencies": {
     "@types/mssql": "^9.1.4",
     "@types/node": "^20.11.8",
     "@vitest/ui": "^1.2.2",
-    "vitest": "0.34.*"
+    "vitest": "0.34.*",
+    "mssql": "^10.0.2",
+    "sql-cli": "^0.6.2",
+    "uuid": "^9.0.1"
   }
 }

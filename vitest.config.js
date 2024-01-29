@@ -9,6 +9,5 @@ export default defineConfig({
       clearMocks: true,
       watch: false,
       silent: true,
-      setupFiles: ['src/testSetup.js'],
   },
 })
