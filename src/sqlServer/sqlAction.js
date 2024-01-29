@@ -18,6 +18,6 @@ export class SqlAction {
         console.log(`## executing ${this.#fileName} ##`);
         console.log(file);
 
-        await this.#sqlServer.execute(file)
+        return await this.#sqlServer.execute(file)
     }
 }

@@ -4,6 +4,6 @@ beforeAll(async () => {
     await TestUtils.startDB();
 });
 
-afterAll(async () => {
-    await TestUtils.destroySqlDb();
-});
+// afterAll(async () => {
+//     await TestUtils.destroySqlDb();
+// });

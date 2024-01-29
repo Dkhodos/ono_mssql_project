@@ -41,6 +41,29 @@ export default class SqlServer {
         }
     }
 
+    async executeAll(queries) {
+        let transaction;
+        try {
+            await this.#connect();
+            transaction = await this.#beginTransaction();
+
+            const results = [];
+            for (const query of queries) {
+                const result = await this.#pool.request().query(query);
+                results.push(result);
+            }
+
+            await this.#commitTransaction(transaction);
+            return results;
+        } catch (err) {
+            console.error('Error executing queries:', err);
+            if (transaction) await this.#rollbackTransaction(transaction);
+            throw err;
+        } finally {
+            await this.#disconnect();
+        }
+    }
+
     async #connect() {
         try {
             await this.#pool.connect();
@@ -71,7 +94,7 @@ export default class SqlServer {
         await this.execute(`CREATE DATABASE ${this.#dbName}`);
     }
 
-    async dropDatabase() {
+    async #dropDatabase() {
         await this.execute(`DROP DATABASE ${this.#dbName}`);
     }
 
@@ -83,8 +106,8 @@ export default class SqlServer {
     }
 
     #getNewDBName(){
-        SqlServer.#dbNumber += 1;
-        return `db_${SqlServer.#dbNumber}`;
+        const postfix = randomUUID().replaceAll("-", "_")
+        return `db_${postfix}`;
     }
 
     async #beginTransaction() {
