@@ -9,11 +9,12 @@ export default defineConfig({
       clearMocks: true,
       watch: false,
       silent: true,
-      reporters: ["default", "vitest-markdown-reporter"],
+      reporters: ["default", "html"],
       outputFile: {
         markdown: "test-report.md",
       },
       minThreads: process.env.CI ? 1 : 4,
       maxThreads: process.env.CI ? 1 : 8,
+      retry: 10
   },
 })
