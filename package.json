@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest run",
-    "dev": "node src/index.ts"
+    "dev": "node src/index.ts",
+    "type-check": "tsc"
   },
   "author": "",
   "license": "ISC",
