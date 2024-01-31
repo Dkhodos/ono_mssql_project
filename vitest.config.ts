@@ -13,8 +13,8 @@ export default defineConfig({
       outputFile: {
         markdown: "test-report.md",
       },
-      minThreads: process.env.CI ? 1 : 4,
-      maxThreads: process.env.CI ? 1 : 8,
-      retry: 10
+      // minThreads: process.env.CI ? 1 : 4,
+      // maxThreads: process.env.CI ? 1 : 8,
+      // retry: 10
   },
 })

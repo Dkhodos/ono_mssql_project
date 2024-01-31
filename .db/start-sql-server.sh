@@ -25,9 +25,6 @@ else
 
         # Build and start the mssql service in detached mode
         docker-compose up --build -d mssql
-
-        echo "Waiting for SQL server to start... (3s)"
-        sleep 3
     else
         echo "mssql service is already running."
     fi
