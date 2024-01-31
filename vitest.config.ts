@@ -9,7 +9,7 @@ export default defineConfig({
       clearMocks: true,
       watch: false,
       silent: true,
-      reporters: ["default", "html"],
+      reporters: ["default", "vitest-markdown-reporter"],
       outputFile: {
         markdown: "test-report.md",
       },
