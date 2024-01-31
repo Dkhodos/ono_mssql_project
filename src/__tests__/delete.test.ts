@@ -1,12 +1,14 @@
-import { SqlAction } from "../sqlServer/sqlAction.js";
-import { TestUtils } from "../testUtils.js";
-import { User, UserGenerator } from "../dataGenerators/UserGenerator.js";
-import { Content, ContentGenerator } from "../dataGenerators/ContentGenerator.js";
+import {User, UserGenerator} from "../dataGenerators/UserGenerator.js";
+import {Content, ContentGenerator} from "../dataGenerators/ContentGenerator.js";
+import SqlServer from "../sqlServer/sqlServer.js";
+import {TestUtils} from "../testUtils.js";
+import {SqlAction} from "../sqlServer/sqlAction.js";
+
 
 describe("Content Deletion", () => {
     const userGenerator = new UserGenerator();
     const contentGenerator = new ContentGenerator();
-    let sqlServer;
+    let sqlServer: SqlServer;
 
     // Fixed UUIDs for Users
     const userIDs = [
@@ -44,7 +46,7 @@ describe("Content Deletion", () => {
 
         // Test to confirm the deletion
         const results = await sqlServer.execute(`SELECT id FROM Content`);
-        const remainingContents = results['recordset'].map(({ id }) => id);
+        const remainingContents = results['recordset'].map(({ id }: {id: string}) => id);
         const expectedRemainingContentIds = [contentIDs[0], contentIDs[2]];
         expect(remainingContents).toStrictEqual(expectedRemainingContentIds);
     });

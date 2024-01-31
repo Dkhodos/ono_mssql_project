@@ -1,7 +1,20 @@
 import { faker } from "@faker-js/faker";
+import {SqlBaseGenerator, SqlObject} from "./abc/BaseGenerator.js";
 
-export class Media {
-    constructor({id, content_id, media_type, url} = {}) {
+interface Props {
+    id?: string
+    content_id: string
+    media_type?: string
+    url?: string
+}
+
+export class Media implements SqlObject{
+    id: string
+    content_id: string
+    media_type: string
+    url: string
+
+    constructor({id, content_id, media_type, url}: Props) {
         this.id = id ?? faker.string.uuid();
         this.content_id = content_id; // This should be provided, as it references Content
         this.media_type = media_type ?? faker.lorem.word();
@@ -9,8 +22,8 @@ export class Media {
     }
 }
 
-export class MediaGenerator {
-    generateQuery(mediaRecords) {
+export class MediaGenerator implements SqlBaseGenerator<Media>{
+    generateQuery(mediaRecords: Media[]) {
         const queryArray = [
             'INSERT INTO Media (id, content_id, media_type, url)',
             'VALUES'

@@ -1,7 +1,9 @@
-import {SqlAction} from "../sqlServer/sqlAction.js";
+import SqlServer from "../sqlServer/sqlServer.js";
 import {TestUtils} from "../testUtils.js";
+import {SqlAction} from "../sqlServer/sqlAction.js";
+
 describe("Test SQL Inset data", () => {
-    let sqlServer;
+    let sqlServer: SqlServer;
 
     beforeEach(async () => {
         sqlServer = await TestUtils.initSqlDB();

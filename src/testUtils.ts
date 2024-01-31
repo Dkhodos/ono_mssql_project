@@ -1,6 +1,7 @@
 import SqlServer from "./sqlServer/sqlServer.js";
 import {SqlAction} from "./sqlServer/sqlAction.js";
 
+
 export const TestUtils = {
     initSqlDB: async () => {
         const sqlServer = new SqlServer();

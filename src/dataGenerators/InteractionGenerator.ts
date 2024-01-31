@@ -1,10 +1,29 @@
 import { faker } from "@faker-js/faker";
-import {GeneratorFormatter} from "./GeneratorFormatter.js";
+import {GeneratorFormatter} from "./utils/GeneratorFormatter.js";
+import {SqlBaseGenerator, SqlObject} from "./abc/BaseGenerator.js";
 
 const formatter = new GeneratorFormatter()
 
-export class Interaction {
-    constructor({user_id, content_id, type, content, source, time_spent, date} = {}) {
+interface Props{
+    user_id: string
+    content_id: string
+    type?: string
+    content?: string
+    source?: string
+    time_spent?: number
+    date?: Date
+}
+
+export class Interaction implements SqlObject{
+    user_id: string
+    content_id: string
+    type: string
+    content: string
+    source: string
+    time_spent: number
+    date: Date
+
+    constructor({user_id, content_id, type, content, source, time_spent, date}: Props) {
         this.user_id = user_id; // This should be provided, as it references a User
         this.content_id = content_id; // This should be provided, as it references Content
         this.type = type ?? faker.lorem.word();
@@ -15,8 +34,8 @@ export class Interaction {
     }
 }
 
-export class InteractionGenerator {
-    generateQuery(interactions) {
+export class InteractionGenerator implements SqlBaseGenerator<Interaction>{
+    generateQuery(interactions: Interaction[]) {
         const queryArray = [
             'INSERT INTO Interactions (user_id, content_id, type, content, source, time_spent, date)',
             'VALUES'

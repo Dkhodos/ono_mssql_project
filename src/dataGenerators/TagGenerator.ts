@@ -1,14 +1,23 @@
 import { faker } from "@faker-js/faker";
+import {SqlBaseGenerator} from "./abc/BaseGenerator.js";
+
+interface Props {
+    id?: string
+    name?: string
+}
 
 export class Tag {
-    constructor({id, name} = {}) {
+    id: string
+    name: string
+
+    constructor({id, name}: Props) {
         this.id = id ?? faker.string.uuid();
         this.name = name ?? faker.lorem.word();
     }
 }
 
-export class TagGenerator {
-    generateQuery(tags) {
+export class TagGenerator implements SqlBaseGenerator<Tag>{
+    generateQuery(tags: Tag[]) {
         const queryArray = [
             'INSERT INTO Tags (id, name)',
             'VALUES'

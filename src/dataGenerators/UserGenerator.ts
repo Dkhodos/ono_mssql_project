@@ -1,10 +1,25 @@
 import {faker} from "@faker-js/faker";
-import {GeneratorFormatter} from "./GeneratorFormatter.js";
+import {GeneratorFormatter} from "./utils/GeneratorFormatter.js";
+import {SqlBaseGenerator, SqlObject} from "./abc/BaseGenerator.js";
 
 const formatter = new GeneratorFormatter()
 
-export class User{
-    constructor({id, email, demographic, date_of_birth, friend_count} = {}) {
+interface Props {
+    id?: string
+    email?: string
+    demographic?: string
+    date_of_birth?: Date
+    friend_count?: number
+}
+
+export class User implements SqlObject{
+    id: string
+    email: string
+    demographic: string
+    date_of_birth: Date
+    friend_count: number
+
+    constructor({id, email, demographic, date_of_birth, friend_count}: Props) {
         this.id = id ?? faker.string.uuid();
         this.email = email ?? faker.internet.email();
         this.demographic = demographic ?? faker.location.county();
@@ -13,8 +28,8 @@ export class User{
     }
 }
 
-export class UserGenerator {
-    generateQuery(users){
+export class UserGenerator implements SqlBaseGenerator<User>{
+    generateQuery(users: User[]){
         const queryArray = [
             'INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)',
             'VALUES'

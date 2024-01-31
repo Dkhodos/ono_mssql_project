@@ -1,11 +1,13 @@
-import {SqlAction} from "../sqlServer/sqlAction.js";
-import {TestUtils} from "../testUtils.js";
 import {User, UserGenerator} from "../dataGenerators/UserGenerator.js";
 import {Content, ContentGenerator} from "../dataGenerators/ContentGenerator.js";
 import {Interaction, InteractionGenerator} from "../dataGenerators/InteractionGenerator.js";
 import {ContentTag, ContentTagGenerator} from "../dataGenerators/ContentTagGenerator.js";
 import {Tag, TagGenerator} from "../dataGenerators/TagGenerator.js";
 import {Media, MediaGenerator} from "../dataGenerators/MediaGenerator.js";
+import {TestUtils} from "../testUtils.js";
+import SqlServer from "../sqlServer/sqlServer.js";
+import {SqlAction} from "../sqlServer/sqlAction.js";
+
 describe("SQL Join data", () => {
     const userGenerator = new UserGenerator();
     const contentGenerator = new ContentGenerator();
@@ -35,7 +37,7 @@ describe("SQL Join data", () => {
         "2f0e1567-4083-4f49-b6f6-4fe5009c3ca9"
     ].map(item => item.toUpperCase());
 
-    let sqlServer;
+    let sqlServer: SqlServer;
 
     beforeEach(async () => {
         sqlServer = await TestUtils.initSqlDB();
@@ -88,7 +90,7 @@ describe("SQL Join data", () => {
               new Date('2024-01-01'),
               new Date('2024-01-02'),
         ];
-        expect(results['recordset'].map(({date}) => date)).toStrictEqual(expectedDates);
+        expect(results['recordset'].map(({date}: {date: string}) => date)).toStrictEqual(expectedDates);
     });
 
     test("Select Content Text Where No Corresponding Media", async () => {
@@ -137,6 +139,6 @@ describe("SQL Join data", () => {
         const action = new SqlAction(sqlServer, 'select-content-text-no-media.sql');
         const results = await action.execute();
         const expectedTexts = [contents[1].text]; // Only the text of the second content should be selected
-        expect(results['recordset'].map(({text}) => text)).toStrictEqual(expectedTexts);
+        expect(results['recordset'].map(({text}: {text: string}) => text)).toStrictEqual(expectedTexts);
     });
 })

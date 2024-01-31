@@ -1,8 +1,10 @@
-import {SqlAction} from "../sqlServer/sqlAction.js";
-import {TestUtils} from "../testUtils.js";
 import {User, UserGenerator} from "../dataGenerators/UserGenerator.js";
 import {Content, ContentGenerator} from "../dataGenerators/ContentGenerator.js";
 import {Interaction, InteractionGenerator} from "../dataGenerators/InteractionGenerator.js";
+import SqlServer from "../sqlServer/sqlServer.js";
+import {TestUtils} from "../testUtils.js";
+import {SqlAction} from "../sqlServer/sqlAction.js";
+
 describe("SQL Inset data", () => {
     const userGenerator = new UserGenerator();
     const contentGenerator = new ContentGenerator();
@@ -15,7 +17,7 @@ describe("SQL Inset data", () => {
     ].map(item => item.toUpperCase());
 
 
-    let sqlServer;
+    let sqlServer: SqlServer;
 
     beforeEach(async () => {
         sqlServer = await TestUtils.initSqlDB();
@@ -36,7 +38,7 @@ describe("SQL Inset data", () => {
         const action = new SqlAction(sqlServer,'select-users-with-friends-count.sql');
         const results = await action.execute();
 
-        const ids = results['recordset'].map(({id}) => id);
+        const ids = results['recordset'].map(({id}: {id: string}) => id);
         expect(ids.sort()).toStrictEqual(userIDs.sort())
     });
 
@@ -63,7 +65,7 @@ describe("SQL Inset data", () => {
         const action = new SqlAction(sqlServer, 'select-content-by-type-order-by-date.sql');
         const results = await action.execute();
 
-        const texts = results['recordset'].map(({text}) => text);
+        const texts = results['recordset'].map(({text}: {text: string}) => text);
         expect(texts).toStrictEqual(expectedTexts);
     });
 

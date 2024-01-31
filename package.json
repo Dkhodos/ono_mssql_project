@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest run",
-    "dev": "node src/index.js"
+    "dev": "node src/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "@vitest/ui": "^1.2.2",
     "mssql": "^10.0.2",
     "sql-cli": "^0.6.2",
+    "typescript": "^5.3.3",
     "uuid": "^9.0.1",
     "vitest": "0.34.*",
     "vitest-markdown-reporter": "^0.1.2"
