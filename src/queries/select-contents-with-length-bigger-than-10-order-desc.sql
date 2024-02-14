@@ -1,0 +1,4 @@
+SELECT *
+FROM Content
+WHERE LEN(text) > 10
+ORDER BY LEN(text) DESC;
