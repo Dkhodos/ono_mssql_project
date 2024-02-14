@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest run",
+    "test:ui": "vitest --ui --watch=true",
     "dev": "node src/index.ts",
     "type-check": "tsc"
   },
@@ -16,6 +17,7 @@
     "@types/mssql": "^9.1.4",
     "@types/node": "^20.11.8",
     "@vitest/ui": "^1.2.2",
+    "happy-dom": "^13.3.8",
     "mssql": "^10.0.2",
     "sql-cli": "^0.6.2",
     "typescript": "^5.3.3",
