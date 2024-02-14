@@ -4,6 +4,11 @@
 
 - Some intro here...
 
+## Tools
+- DB: Using docker with MS Azure official image: [mcr.microsoft.com/azure-sql-edge]("https://hub.docker.com/_/microsoft-azure-sql-edge")
+- Tested using MS SQL official Node.js library: [mssql]("https://www.npmjs.com/package/mssql")
+- Source: https://github.com/Dkhodos/sql_project
+
 ## Tasks
 
 ### CREATE
@@ -146,15 +151,20 @@ VALUES
 (NEWID(), '28D7A6E2-0029-4EE9-A5D1-79593DA7420B', 'Video', 'https://meta.com/video/chuck-media');
 ```
 
-##### Output for running Output for running `SELECT * FROM Interactions`:
+##### Output for running Output for running `SELECT * FROM Content`:
+| id                                   | user_id                              | type | text                                                                                                         | external_link                                    | date                     |
+| ------------------------------------ | ------------------------------------ | ---- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | ------------------------ |
+| AAAC36FF-62B4-463F-8521-259D840A9D6D | A20D6D3F-6989-4943-8112-9A8FFCC86280 | Post | Martial Arts Training Tips                                                                                   | https://martialarts.example.com                  | 2024-02-14T23:31:09.293Z |
+| 402C3EE9-DCEA-4073-9616-4AF99D518764 | ECE7C609-7316-48A1-8719-A223B2F4EB3B | Ad   | Check out the Latest Comedy Shows!                                                                           | https://comedyshows.example.com/mike-myers/buyme | 2024-02-14T23:31:09.293Z |
+| 28D7A6E2-0029-4EE9-A5D1-79593DA7420B | A20D6D3F-6989-4943-8112-9A8FFCC86280 | Post | In the Beginning there was nothing ... then Chuck Norris roundhouse kicked nothing and told it to get a job. |                                                  | 2024-02-14T23:31:09.293Z |
+| B95B6CC9-B477-45BD-8601-A46EB872C13F | 44A4BB81-DEFF-41BC-AF2B-FAA964EDC965 | Post | Cause this is thriller, thriller night...                                                                    |                                                  | 2024-02-14T23:31:09.293Z |
+| 225A3539-4DFC-4182-A0ED-D36E0D08A426 | 26102B74-F154-4592-97FF-A3255C9266B5 | Ad   | How to become a pop start...                                                                                 | www.totally-real-madona.xyz                      | 2024-02-14T23:31:09.293Z |
 
-| id                                   | user_id                              | type | text                                                                                                         | external_link                                    | date |
-| ------------------------------------ | ------------------------------------ | ---- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | ---- |
-| AAAC36FF-62B4-463F-8521-259D840A9D6D | A20D6D3F-6989-4943-8112-9A8FFCC86280 | Post | Martial Arts Training Tips                                                                                   | https://martialarts.example.com                  |      |
-| 402C3EE9-DCEA-4073-9616-4AF99D518764 | ECE7C609-7316-48A1-8719-A223B2F4EB3B | Ad   | Check out the Latest Comedy Shows!                                                                           | https://comedyshows.example.com/mike-myers/buyme |      |
-| 28D7A6E2-0029-4EE9-A5D1-79593DA7420B | A20D6D3F-6989-4943-8112-9A8FFCC86280 | Post | In the Beginning there was nothing ... then Chuck Norris roundhouse kicked nothing and told it to get a job. |                                                  |      |
-| B95B6CC9-B477-45BD-8601-A46EB872C13F | 44A4BB81-DEFF-41BC-AF2B-FAA964EDC965 | Post | Cause this is thriller, thriller night...                                                                    |                                                  |      |
-| 225A3539-4DFC-4182-A0ED-D36E0D08A426 | 26102B74-F154-4592-97FF-A3255C9266B5 | Ad   | How to become a pop start...                                                                                 | www.totally-real-madona.xyz                      |      |
+##### Output for running Output for running `SELECT * FROM Media`:
+| id                                   | content_id                           | media_type | url                                                        |
+| ------------------------------------ | ------------------------------------ | ---------- | ---------------------------------------------------------- |
+| 0FC28344-8FBF-48E6-8458-90EAC04375B5 | 28D7A6E2-0029-4EE9-A5D1-79593DA7420B | Video      | https://meta.com/video/chuck-media                         |
+| 8C6F3A1E-2751-4047-B083-B7B33BAC2ADE | 402C3EE9-DCEA-4073-9616-4AF99D518764 | Image      | https://comedyshows.example.com/mike-myers/buyme/image.png |
 
 #### 3. Insert 5 new Interactions (based on 1, 2)
 
@@ -1060,9 +1070,9 @@ WHERE demographic = 'USA';
 ```
 ##### Output for `SELECT * FROM Users`:
 | id                                   | email                       | demographic   | date_of_birth            | friend_count |
-| ------------------------------------ | --------------------------- | ------------- | ------------------------ | ------------ |
-| 0B4AD9ED-2E38-4163-91CF-7E25F46D3868 | Amie89@hotmail.com          | Canada        | 2023-11-03T00:00:00.000Z | 6872         |
-| AC980F43-9B9F-42A5-BB41-97DA45ED0EEE | Reginald_Daniel52@yahoo.com | United States | 2023-03-27T00:00:00.000Z | 3413         |
+| ------------------------------------ | --------------------------- | ------------- | ------------------------ |--------------|
+| 0B4AD9ED-2E38-4163-91CF-7E25F46D3868 | john.doe@example.com          | Canada        | 2023-11-03T00:00:00.000Z | 100          |
+| AC980F43-9B9F-42A5-BB41-97DA45ED0EEE | jane.doe@example.com | United States | 2023-03-27T00:00:00.000Z | 150          |
 
 #### Move a specific recommendation to a new segment
 ##### Existing Users

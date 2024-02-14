@@ -127,6 +127,9 @@ describe("Test SQL Inset data", () => {
         await contentCreationAction.execute();
 
         const content = await sqlServer.execute('SELECT * FROM Content');
+
+        console.log(JSON.stringify(content['recordset']))
+
         const contentRecordset = content['recordset'].sort(contentSorter);
         for (let i = 0; i < expectedContent.length; i++) {
             expect(contentRecordset[i]['id']).toStrictEqual(expectedContent[i]['id']);
@@ -136,8 +139,10 @@ describe("Test SQL Inset data", () => {
             expect(contentRecordset[i]['external_link']).toStrictEqual(expectedContent[i]['external_link']);
         }
 
-        const media = await sqlServer.execute('SELECT * FROM Media')
-        const mediaRecordset = media['recordset'].sort(mediaSorter)
+        const media = await sqlServer.execute('SELECT * FROM Media');
+        console.log(JSON.stringify(media['recordset']))
+
+        const mediaRecordset = media['recordset'].sort(mediaSorter);
         for (let i = 0; i < expectedMedia.length; i++) {
             expect(mediaRecordset[i]['content_id']).toStrictEqual(expectedMedia[i]['content_id']);
             expect(mediaRecordset[i]['media_type']).toStrictEqual(expectedMedia[i]['media_type']);
