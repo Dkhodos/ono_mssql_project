@@ -6,7 +6,6 @@ import {expect} from "vitest";
 import {Recommendation, RecommendationGenerator} from "../dataGenerators/RecommendationGenerator.js";
 import {Segment, SegmentGenerator} from "../dataGenerators/SegementsGenerator.js";
 import {Content, ContentGenerator} from "../dataGenerators/ContentGenerator.js";
-import {c} from "vitest/dist/reporters-5f784f42.js";
 
 describe('SQL update data', () => {
     const userGenerator = new UserGenerator();

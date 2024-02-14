@@ -191,48 +191,18 @@ VALUES
 | 9485B8DB-BE44-4131-99F2-F90C4025DE46 | 402C3EE9-DCEA-4073-9616-4AF99D518764 | Share   |                   | discovery | 0          | 2024-02-14T20:59:16.163Z |
 
 ### SELECT
-
 #### 1. Select Users by friend count (Simple Where Query)
-
-##### Existing Users
-
+##### Existing Users:
 ```sql
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
-(
-            NEWID(),
-            'Chelsea.Corkery21@hotmail.com',
-            'Tayside',
-            '2023-12-02 04:15:03',
-            15),
-(
-            NEWID(),
-            'Savannah62@gmail.com',
-            'West Sussex',
-            '2023-08-15 17:46:22',
-            3),
-(
-            NEWID(),
-            'Emie_Nitzsche1@gmail.com',
-            'Henry County',
-            '2023-10-08 18:13:33',
-            200),
-(
-            NEWID(),
-            'Alayna_Haley84@yahoo.com',
-            'Devon',
-            '2023-10-22 22:37:06',
-            7),
-(
-            NEWID(),
-            'Jed_Ortiz89@gmail.com',
-            'Dorset',
-            '2023-12-06 17:27:41',
-            400);
+(NEWID(), 'Chelsea.Corkery21@hotmail.com', 'Tayside', '2023-12-02 04:15:03', 15),
+(NEWID(), 'Savannah62@gmail.com', 'West Sussex', '2023-08-15 17:46:22', 3),
+(NEWID(), 'Emie_Nitzsche1@gmail.com', 'Henry County', '2023-10-08 18:13:33', 200),
+(NEWID(), 'Alayna_Haley84@yahoo.com', 'Devon', '2023-10-22 22:37:06', 7),
+(NEWID(), 'Jed_Ortiz89@gmail.com', 'Dorset', '2023-12-06 17:27:41', 400);
 ```
-
-##### Query
-
+##### Query:
 ```sql
 SELECT email, id
 FROM Users
@@ -240,7 +210,6 @@ WHERE friend_count > 10;
 ```
 
 ##### Output
-
 | email                      | id                                   |
 | -------------------------- | ------------------------------------ |
 | Estelle.OKon66@gmail.com   | 8BABF01F-CFEB-4D9E-B41F-723277CBF0F1 |
@@ -248,9 +217,7 @@ WHERE friend_count > 10;
 | Macey23@yahoo.com          | F65337B8-2D73-4269-AB74-C25BAC081001 |
 
 #### 2. Select Content by type and order by date (ORDER BY/HAVING/GROUP BY/AGGRIGATION)
-
 ##### Existing Users
-
 ```sql
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
@@ -1074,6 +1041,91 @@ JOIN Media M ON C.id = M.content_id;
 | ------------------------------------------------------------------------------- |
 | Doloremque patrocinor suasoria vetus turba vos venia culpo tergiversatio arcus. |
 | Cilicium utrimque sequi suggero victoria deripio temporibus vesper.             |
+
+### Update
+#### Update all users with a "USA" demographic to "United States
+##### Existing Users
+```sql
+INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
+VALUES
+(NEWID(), 'john.doe@example.com', 'USA', '1985-04-12', 100),
+(NEWID(), 'jane.doe@example.com', 'Canada', '1990-08-24', 150);
+```
+##### Query
+```sql
+-- Updating demographic from 'USA' to 'United States' for relevant users
+UPDATE Users
+SET demographic = 'United States'
+WHERE demographic = 'USA';
+```
+##### Output for `SELECT * FROM Users`:
+| id                                   | email                       | demographic   | date_of_birth            | friend_count |
+| ------------------------------------ | --------------------------- | ------------- | ------------------------ | ------------ |
+| 0B4AD9ED-2E38-4163-91CF-7E25F46D3868 | Amie89@hotmail.com          | Canada        | 2023-11-03T00:00:00.000Z | 6872         |
+| AC980F43-9B9F-42A5-BB41-97DA45ED0EEE | Reginald_Daniel52@yahoo.com | United States | 2023-03-27T00:00:00.000Z | 3413         |
+
+#### Move a specific recommendation to a new segment
+##### Existing Users
+```sql
+INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
+VALUES
+(
+    'a0ddf08a-193f-4287-b994-214c2c6cd806', -- User ID
+    'Luella94@gmail.com',                   -- Email
+    'Kent',                                 -- Demographic
+    '2023-08-06 22:44:46',                  -- Date of Birth
+    1631                                    -- Friend Count
+);
+```
+##### Existing Content
+```sql
+INSERT INTO Content (id, user_id, type, text, external_link, date)
+VALUES
+(
+    '3c840aab-2714-4ebc-a8f7-c809c0e87a89', -- Content ID
+    'a0ddf08a-193f-4287-b994-214c2c6cd806', -- User ID (Foreign Key)
+    'tamisium',                             -- Content Type
+    'Hic adicio adamo tolero cunae cohibeo cubitum synagoga turbo.', -- Text
+    'https://bright-villa.info/',           -- External Link
+    '2024-02-14 05:04:03'                   -- Date
+);
+```
+##### Existing Segments
+```sql
+INSERT INTO Segments (id, name)
+VALUES
+(
+    '64EFEF9A-5682-42A9-8894-0A80811738D0', -- Segment ID for Segment A
+    'Segment A'
+),
+(
+    'DCAD39E6-8F67-4D2C-A423-A6E698BA8932', -- Segment ID for Segment B
+    'Segment B'
+);
+```
+##### Existing Recommendations
+```sql
+INSERT INTO Recommendations (id, content_id, segment_id)
+VALUES
+(
+    '4dad31c7-049a-4f85-a5c8-1187d8275d01', -- Recommendation ID
+    '3c840aab-2714-4ebc-a8f7-c809c0e87a89', -- Content ID (Foreign Key)
+    '64EFEF9A-5682-42A9-8894-0A80811738D0'  -- Segment ID (Foreign Key)
+);
+```
+##### Query
+```sql
+-- Moving a recommendation from 'Segment A' to 'Segment B'
+UPDATE Recommendations
+SET segment_id = 'dcad39e6-8f67-4d2c-a423-a6e698ba8932' -- New segment ID (Segment B)
+WHERE id = '4dad31c7-049a-4f85-a5c8-1187d8275d01'; -- Specific ID of the recommendation to move
+```
+
+##### Output for `SELECT * FROM Recommendations`
+| id                                   | content_id                           | segment_id                           |
+| ------------------------------------ | ------------------------------------ | ------------------------------------ |
+| 4DAD31C7-049A-4F85-A5C8-1187D8275D01 | 3C840AAB-2714-4EBC-A8F7-C809C0E87A89 | DCAD39E6-8F67-4D2C-A423-A6E698BA8932 |
+
 
 ### DROP
 
