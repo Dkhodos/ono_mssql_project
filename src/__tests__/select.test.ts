@@ -109,7 +109,6 @@ describe('SQL Inset data', () => {
       'select-content-by-type-order-by-date.sql'
     );
     const results = await action.execute();
-    console.log(JSON.stringify(results['recordset'], null, 2));
     const texts = results['recordset'].map(
       ({ text }: { text: string }) => text
     );
@@ -259,7 +258,6 @@ describe('SQL Inset data', () => {
       'select-users-interactions-count-having-more-than-2-order-desc.sql'
     );
     const results = await action.execute();
-
     const expectedResults = [
       { user_id: userIDs[1], totalInteractions: 3 },
       { user_id: userIDs[0], totalInteractions: 3 },
@@ -300,7 +298,6 @@ describe('SQL Inset data', () => {
     const results = await action.execute();
 
     const expectedResults = [{ user_id: userIDs[0], NumberOfContents: 2 }];
-
     expect(results['recordset']).toStrictEqual(expectedResults);
   });
 

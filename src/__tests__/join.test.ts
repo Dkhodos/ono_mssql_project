@@ -54,7 +54,8 @@ describe('SQL Join data', () => {
   test('Interaction Dates Selection Based on Source and Tag Count', async () => {
     // Generate and insert users
     const users = userIDs.map((id) => new User({ id }));
-    await sqlServer.execute(userGenerator.generateQuery(users));
+    const usersQuery = userGenerator.generateQuery(users);
+    await sqlServer.execute(usersQuery);
 
     // Generate and insert content
     const contents = [
@@ -62,15 +63,16 @@ describe('SQL Join data', () => {
       new Content({ id: contentIDs[1], user_id: userIDs[1] }),
       new Content({ id: contentIDs[2], user_id: userIDs[2] }),
     ];
-    await sqlServer.execute(contentGenerator.generateQuery(contents));
+    const contentsQuery = contentGenerator.generateQuery(contents);
+    await sqlServer.execute(contentsQuery);
 
     const tags = [
       new Tag({ id: tagIDs[0], name: 'Tag1' }),
       new Tag({ id: tagIDs[1], name: 'Tag2' }),
       new Tag({ id: tagIDs[2], name: 'Tag3' }),
     ];
-
-    await sqlServer.execute(tagGenerator.generateQuery(tags));
+    const tagsQuery = tagGenerator.generateQuery(tags);
+    await sqlServer.execute(tagsQuery);
 
     // Generate and insert content tags
     const contentTags = [
@@ -80,7 +82,8 @@ describe('SQL Join data', () => {
       new ContentTag({ content_id: contentIDs[1], tag_id: tagIDs[1] }), // Another content with multiple tags
       new ContentTag({ content_id: contentIDs[2], tag_id: tagIDs[2] }), // Content with single tag
     ];
-    await sqlServer.execute(contentTagGenerator.generateQuery(contentTags));
+    const contentTagsQuery = contentTagGenerator.generateQuery(contentTags);
+    await sqlServer.execute(contentTagsQuery);
 
     // Generate and insert interactions
     const interactions = [
@@ -103,7 +106,8 @@ describe('SQL Join data', () => {
         date: new Date('2024-01-03'),
       }),
     ];
-    await sqlServer.execute(interactionGenerator.generateQuery(interactions));
+    const interactionsQuery = interactionGenerator.generateQuery(interactions);
+    await sqlServer.execute(interactionsQuery);
 
     const action = new SqlAction(
       sqlServer,
@@ -147,10 +151,14 @@ describe('SQL Join data', () => {
     ];
 
     // Insert data into the database
-    await sqlServer.execute(userGenerator.generateQuery(users));
-    await sqlServer.execute(contentGenerator.generateQuery(contents));
-    await sqlServer.execute(tagGenerator.generateQuery(tags));
-    await sqlServer.execute(contentTagGenerator.generateQuery(contentTags));
+    const userQuery = userGenerator.generateQuery(users);
+    const contentQuery = contentGenerator.generateQuery(contents);
+    const tagQuery = tagGenerator.generateQuery(tags);
+    const contentTagQuery = contentTagGenerator.generateQuery(contentTags);
+    await sqlServer.execute(userQuery);
+    await sqlServer.execute(contentQuery);
+    await sqlServer.execute(tagQuery);
+    await sqlServer.execute(contentTagQuery);
 
     // Media records - only add to some contents to test the query
     const mediaRecords = [
@@ -172,12 +180,13 @@ describe('SQL Join data', () => {
     const action = new SqlAction(sqlServer, 'select-content-text-no-media.sql');
     const results = await action.execute();
     const expectedTexts = [contents[1].text]; // Only the text of the second content should be selected
+
     expect(
       results['recordset'].map(({ text }: { text: string }) => text)
     ).toStrictEqual(expectedTexts);
   });
 
-  test('Select Content Text Where is Corresponding Media', async () => {
+  test('Select Content Text Where is Corresponding Media Exists', async () => {
     // Static arrays of Users, Contents, Tags, and ContentTags
     const users = [
       new User({ id: userIDs[0] }),
@@ -237,8 +246,7 @@ describe('SQL Join data', () => {
       { text: contents[0].text },
       { text: contents[2].text },
     ];
-    console.log(results['recordset'], expectedTexts);
-
+    console.log(JSON.stringify(results['recordset'], null, 2));
     expect(results['recordset']).toStrictEqual(expectedTexts);
   });
 });
