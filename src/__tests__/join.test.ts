@@ -246,7 +246,6 @@ describe('SQL Join data', () => {
       { text: contents[0].text },
       { text: contents[2].text },
     ];
-    console.log(JSON.stringify(results['recordset'], null, 2));
     expect(results['recordset']).toStrictEqual(expectedTexts);
   });
 });

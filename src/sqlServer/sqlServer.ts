@@ -16,6 +16,7 @@ export default class SqlServer {
     async execute(query: string) {
         try {
             await this.connect();
+            console.log(`executing query:\n${query}\n`);
             return await this.pool.request().query(query);
         } catch (err) {
             console.error('Error executing query:', err);

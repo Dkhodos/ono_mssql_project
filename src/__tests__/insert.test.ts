@@ -1,6 +1,12 @@
 import SqlServer from "../sqlServer/sqlServer.js";
 import {TestUtils} from "../testUtils.js";
 import {SqlAction} from "../sqlServer/sqlAction.js";
+import getSortByKey from "../utils/getSortByKey.js";
+
+const interactionSorter = getSortByKey("user_id");
+const userSorter = getSortByKey('id');
+const contentSorter = getSortByKey('user_id');
+const mediaSorter = getSortByKey('content_id');
 
 describe("Test SQL Inset data", () => {
     let sqlServer: SqlServer;
@@ -46,19 +52,19 @@ describe("Test SQL Inset data", () => {
               date_of_birth: new Date("2000-03-03T00:00:00.000Z"),
               friend_count: 25
             },
-        ]
+        ].sort(userSorter)
 
         const userCreationAction = new SqlAction(sqlServer, "create-users.sql");
         await userCreationAction.execute();
 
         const result = await sqlServer.execute('SELECT * FROM Users');
-        console.log(JSON.stringify(result['recordset'], null, 2))
+        const recordset = result['recordset'].sort(userSorter);
 
         for (let i = 0; i < expected.length; i++) {
-            expect(result['recordset'][i]['id']).toStrictEqual(expected[i]['id']);
-            expect(result['recordset'][i]['email']).toStrictEqual(expected[i]['email']);
-            expect(result['recordset'][i]['demographic']).toStrictEqual(expected[i]['demographic']);
-            expect(result['recordset'][i]['friend_count']).toStrictEqual(expected[i]['friend_count']);
+            expect(recordset[i]['id']).toStrictEqual(expected[i]['id']);
+            expect(recordset[i]['email']).toStrictEqual(expected[i]['email']);
+            expect(recordset[i]['demographic']).toStrictEqual(expected[i]['demographic']);
+            expect(recordset[i]['friend_count']).toStrictEqual(expected[i]['friend_count']);
         }
     });
 
@@ -99,7 +105,7 @@ describe("Test SQL Inset data", () => {
               text: "How to become a pop start...",
               external_link: "www.totally-real-madona.xyz",
             }
-        ];
+        ].sort(contentSorter);
 
         const expectedMedia = [
           {
@@ -112,7 +118,7 @@ describe("Test SQL Inset data", () => {
             media_type: 'Video',
             url: 'https://meta.com/video/chuck-media'
           }
-        ];
+        ].sort(mediaSorter);
 
         const userCreationAction = new SqlAction(sqlServer, "create-users.sql");
         await userCreationAction.execute();
@@ -121,23 +127,25 @@ describe("Test SQL Inset data", () => {
         await contentCreationAction.execute();
 
         const content = await sqlServer.execute('SELECT * FROM Content');
+        const contentRecordset = content['recordset'].sort(contentSorter);
         for (let i = 0; i < expectedContent.length; i++) {
-            expect(content['recordset'][i]['id']).toStrictEqual(expectedContent[i]['id']);
-            expect(content['recordset'][i]['user_id']).toStrictEqual(expectedContent[i]['user_id']);
-            expect(content['recordset'][i]['type']).toStrictEqual(expectedContent[i]['type']);
-            expect(content['recordset'][i]['text']).toStrictEqual(expectedContent[i]['text']);
-            expect(content['recordset'][i]['external_link']).toStrictEqual(expectedContent[i]['external_link']);
+            expect(contentRecordset[i]['id']).toStrictEqual(expectedContent[i]['id']);
+            expect(contentRecordset[i]['user_id']).toStrictEqual(expectedContent[i]['user_id']);
+            expect(contentRecordset[i]['type']).toStrictEqual(expectedContent[i]['type']);
+            expect(contentRecordset[i]['text']).toStrictEqual(expectedContent[i]['text']);
+            expect(contentRecordset[i]['external_link']).toStrictEqual(expectedContent[i]['external_link']);
         }
 
         const media = await sqlServer.execute('SELECT * FROM Media')
+        const mediaRecordset = media['recordset'].sort(mediaSorter)
         for (let i = 0; i < expectedMedia.length; i++) {
-            expect(media['recordset'][i]['content_id']).toStrictEqual(expectedMedia[i]['content_id']);
-            expect(media['recordset'][i]['media_type']).toStrictEqual(expectedMedia[i]['media_type']);
-            expect(media['recordset'][i]['url']).toStrictEqual(expectedMedia[i]['url']);
+            expect(mediaRecordset[i]['content_id']).toStrictEqual(expectedMedia[i]['content_id']);
+            expect(mediaRecordset[i]['media_type']).toStrictEqual(expectedMedia[i]['media_type']);
+            expect(mediaRecordset[i]['url']).toStrictEqual(expectedMedia[i]['url']);
         }
     });
 
-    test("Insert 3 new Interactions: create-interactions.sql", async () => {
+    test("Insert 5 new Interactions: create-interactions.sql", async () => {
         const expected = [
           {
             "user_id": "44A4BB81-DEFF-41BC-AF2B-FAA964EDC965",
@@ -184,7 +192,7 @@ describe("Test SQL Inset data", () => {
             "time_spent": "0",
             "date": "2024-02-14T20:59:16.163Z"
           }
-        ];
+        ].sort(interactionSorter);
 
         const userCreationAction = new SqlAction(sqlServer, "create-users.sql");
         await userCreationAction.execute();
@@ -195,14 +203,16 @@ describe("Test SQL Inset data", () => {
         const interactionsCreationAction = new SqlAction(sqlServer, "create-interactions.sql");
         await interactionsCreationAction.execute();
 
-        const result = await sqlServer.execute('SELECT * FROM Interactions');
+        let result = await sqlServer.execute('SELECT * FROM Interactions');
+        result = [...result['recordset']].sort(interactionSorter);
+
         for (let i = 0; i < expected.length; i++) {
-            expect(result['recordset'][i]['user_id']).toStrictEqual(expected[i]['user_id']);
-            expect(result['recordset'][i]['content_id']).toStrictEqual(expected[i]['content_id']);
-            expect(result['recordset'][i]['type']).toStrictEqual(expected[i]['type']);
-            expect(result['recordset'][i]['content']).toStrictEqual(expected[i]['content']);
-            expect(result['recordset'][i]['source']).toStrictEqual(expected[i]['source']);
-            expect(result['recordset'][i]['time_spent']).toStrictEqual(expected[i]['time_spent']);
+            expect(result[i]['user_id']).toStrictEqual(expected[i]['user_id']);
+            expect(result[i]['content_id']).toStrictEqual(expected[i]['content_id']);
+            expect(result[i]['type']).toStrictEqual(expected[i]['type']);
+            expect(result[i]['content']).toStrictEqual(expected[i]['content']);
+            expect(result[i]['source']).toStrictEqual(expected[i]['source']);
+            expect(result[i]['time_spent']).toStrictEqual(expected[i]['time_spent']);
         }
     });
 })
