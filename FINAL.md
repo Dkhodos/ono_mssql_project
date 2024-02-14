@@ -4,7 +4,7 @@
 
 ## Tasks
 ### CREATE
-Create all the tables in the assigment scope.
+#### Create all the tables in the assigment scope.
 ```sql
 -- Create `Users` Table
 CREATE TABLE Users (
@@ -170,3 +170,22 @@ VALUES
 | ECE7C609-7316-48A1-8719-A223B2F4EB3B | B95B6CC9-B477-45BD-8601-A46EB872C13F | Comment | Thrilling indeed! | discovery | 0          | 2024-02-14T20:59:16.163Z |
 | A20D6D3F-6989-4943-8112-9A8FFCC86280 | AAAC36FF-62B4-463F-8521-259D840A9D6D | Like    |                   | discovery | 0          | 2024-02-14T20:59:16.163Z |
 | 9485B8DB-BE44-4131-99F2-F90C4025DE46 | 402C3EE9-DCEA-4073-9616-4AF99D518764 | Share   |                   | discovery | 0          | 2024-02-14T20:59:16.163Z |
+
+### DROP
+#### Drop all tables in DB
+```sql
+-- Drop tables with foreign key dependencies first
+DROP TABLE Interactions;
+DROP TABLE Content_Tags;
+DROP TABLE Segment_Tags;
+DROP TABLE Segment_Users;
+DROP TABLE Recommendations;
+DROP TABLE Media;
+
+-- Then drop the primary tables
+DROP TABLE Content;
+DROP TABLE Tags;
+DROP TABLE Segments;
+DROP TABLE Users;
+```
+
