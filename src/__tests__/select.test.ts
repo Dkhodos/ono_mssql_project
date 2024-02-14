@@ -45,7 +45,6 @@ describe('SQL Inset data', () => {
       'select-users-with-friends-count.sql'
     );
     const results = await action.execute();
-
     const ids = results['recordset'].map(({ id }: { id: string }) => id);
     expect(ids.sort()).toStrictEqual(userIDs.sort());
   });
@@ -110,7 +109,7 @@ describe('SQL Inset data', () => {
       'select-content-by-type-order-by-date.sql'
     );
     const results = await action.execute();
-
+    console.log(JSON.stringify(results['recordset'], null, 2));
     const texts = results['recordset'].map(
       ({ text }: { text: string }) => text
     );
