@@ -96,7 +96,7 @@ CREATE TABLE Recommendations (
 
 #### 1. Inset 5 new users to the DB
 
-##### Query:
+##### Query
 
 ```sql
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
@@ -108,7 +108,7 @@ VALUES
 ('26102B74-F154-4592-97FF-A3255C9266B5', 'madona@gmail.com', 'Demographic 3', '2023-03-07', 2500);
 ```
 
-##### Expected output after insertion for `SELECT * FROM Users`:
+##### Expected output after insertion for `SELECT * FROM Users`
 
 | id                                   | email                     | demographic   | date_of_birth            | friend_count |
 | ------------------------------------ | ------------------------- | ------------- | ------------------------ | ------------ |
@@ -120,7 +120,7 @@ VALUES
 
 #### 2. Insert 5 new Contents with 2 medias (based on 1)
 
-##### Query:
+##### Query
 
 ```sql
 -- Inserting posts and ads into Content table
@@ -151,7 +151,7 @@ VALUES
 (NEWID(), '28D7A6E2-0029-4EE9-A5D1-79593DA7420B', 'Video', 'https://meta.com/video/chuck-media');
 ```
 
-##### Output for running Output for running `SELECT * FROM Content`:
+##### Output for running Output for running `SELECT * FROM Content`
 | id                                   | user_id                              | type | text                                                                                                         | external_link                                    | date                     |
 | ------------------------------------ | ------------------------------------ | ---- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | ------------------------ |
 | AAAC36FF-62B4-463F-8521-259D840A9D6D | A20D6D3F-6989-4943-8112-9A8FFCC86280 | Post | Martial Arts Training Tips                                                                                   | https://martialarts.example.com                  | 2024-02-14T23:31:09.293Z |
@@ -160,7 +160,7 @@ VALUES
 | B95B6CC9-B477-45BD-8601-A46EB872C13F | 44A4BB81-DEFF-41BC-AF2B-FAA964EDC965 | Post | Cause this is thriller, thriller night...                                                                    |                                                  | 2024-02-14T23:31:09.293Z |
 | 225A3539-4DFC-4182-A0ED-D36E0D08A426 | 26102B74-F154-4592-97FF-A3255C9266B5 | Ad   | How to become a pop start...                                                                                 | www.totally-real-madona.xyz                      | 2024-02-14T23:31:09.293Z |
 
-##### Output for running Output for running `SELECT * FROM Media`:
+##### Output for running Output for running `SELECT * FROM Media`
 | id                                   | content_id                           | media_type | url                                                        |
 | ------------------------------------ | ------------------------------------ | ---------- | ---------------------------------------------------------- |
 | 0FC28344-8FBF-48E6-8458-90EAC04375B5 | 28D7A6E2-0029-4EE9-A5D1-79593DA7420B | Video      | https://meta.com/video/chuck-media                         |
@@ -168,7 +168,7 @@ VALUES
 
 #### 3. Insert 5 new Interactions (based on 1, 2)
 
-##### Query:
+##### Query
 
 ```sql
 -- Inserting interactions into Interactions table
@@ -190,7 +190,7 @@ VALUES
 ('9485B8DB-BE44-4131-99F2-F90C4025DE46', '402C3EE9-DCEA-4073-9616-4AF99D518764', 'Share', NULL, 'discovery', 0, GETDATE());
 ```
 
-##### Output for running `SELECT * FROM Interactions`:
+##### Output for running `SELECT * FROM Interactions`
 
 | user_id                              | content_id                           | type    | content           | source    | time_spent | date                     |
 | ------------------------------------ | ------------------------------------ | ------- | ----------------- | --------- | ---------- | ------------------------ |
@@ -202,7 +202,7 @@ VALUES
 
 ### SELECT
 #### 1. Select Users by friend count (Simple Where Query)
-##### Existing Users:
+##### Existing Users
 ```sql
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
@@ -212,7 +212,7 @@ VALUES
 (NEWID(), 'Alayna_Haley84@yahoo.com', 'Devon', '2023-10-22 22:37:06', 7),
 (NEWID(), 'Jed_Ortiz89@gmail.com', 'Dorset', '2023-12-06 17:27:41', 400);
 ```
-##### Query:
+##### Query
 ```sql
 SELECT email, id
 FROM Users
@@ -1136,6 +1136,111 @@ WHERE id = '4dad31c7-049a-4f85-a5c8-1187d8275d01'; -- Specific ID of the recomme
 | ------------------------------------ | ------------------------------------ | ------------------------------------ |
 | 4DAD31C7-049A-4F85-A5C8-1187D8275D01 | 3C840AAB-2714-4EBC-A8F7-C809C0E87A89 | DCAD39E6-8F67-4D2C-A423-A6E698BA8932 |
 
+### DELETE
+#### Delete all Contents that contain a specific string (Content moderation)
+##### Existing Users
+```sql
+INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
+VALUES
+('3BBA9C78-AFB6-4002-BAB5-805CDBE562C8',  'Aida_Johns@hotmail.com',  'Borders',  '2024-01-08 15:13:01', 8436),
+('8BABF01F-CFEB-4D9E-B41F-723277CBF0F1',  'Mike99@hotmail.com',  'Wayne County',  '2023-07-24 19:22:12', 4600),
+('F65337B8-2D73-4269-AB74-C25BAC081001', 'Carlos38@gmail.com', 'Norfolk', '2023-05-28 09:10:57', 242);
+```
+###### Existing Content
+```sql
+INSERT INTO Content (id, user_id, type, text, external_link, date)
+VALUES
+-- Content that is suppose to stay
+('A2D53DC8-C911-41B9-B853-3EFE93262ED6', '3BBA9C78-AFB6-4002-BAB5-805CDBE562C8', 'acer', 'Content without specific text', 
+ 'https://pitiful-league.com',  '2024-02-16 19:19:00'),
+-- Content that is suppose to be deleted
+('958044E9-1271-456F-9344-885204C87475', '8BABF01F-CFEB-4D9E-B41F-723277CBF0F1', 'vitiosus', 'Content mentioning Hamas',
+ 'https://cruel-leaf.net/', '2024-02-17 03:19:12'),
+-- Content that is suppose to stay
+('F0BBD4FB-3F94-4718-8178-FF32C2F0B749', 'F65337B8-2D73-4269-AB74-C25BAC081001', 'terebro', 'Another content without specific text',
+ 'https://lively-migrant.info/', '2024-02-17 10:37:24');
+```
+##### Query
+```sql
+-- Delete all Content rows that contain the string `Hamas`
+DELETE FROM Content
+WHERE text LIKE '%Hamas%';
+
+```
+##### Output for `SELECT id FROM Content`
+| id                                   | user_id                              | type    | text                                  | external_link                        | date                     |
+| ------------------------------------ | ------------------------------------ | ------- | ------------------------------------- | ------------------------------------ | ------------------------ |
+| A2D53DC8-C911-41B9-B853-3EFE93262ED6 | 3BBA9C78-AFB6-4002-BAB5-805CDBE562C8 | ancilla | Content without specific text         | https://scarce-butter.com/           | 2024-02-17T07:14:28.000Z |
+| F0BBD4FB-3F94-4718-8178-FF32C2F0B749 | F65337B8-2D73-4269-AB74-C25BAC081001 | cubo    | Another content without specific text | https://motionless-negotiation.info/ | 2024-02-17T11:31:20.000Z |
+
+#### Delete all RRecommendations linked to a specific user
+##### Existing users
+```sql
+INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
+VALUES
+-- Keep Recommendations for Yasmine
+('3BBA9C78-AFB6-4002-BAB5-805CDBE562C8',  'Yasmine53@gmail.com',  'Dorset',  '2023-02-19 19:58:28', 7871),
+-- Delete Recommendations for Julia
+('8BABF01F-CFEB-4D9E-B41F-723277CBF0F1', 'Julia.Langosh@hotmail.com', 'Jackson County', '2023-10-13 08:04:01', 5603),
+-- Keep Recommendations for Aurelio
+('F65337B8-2D73-4269-AB74-C25BAC081001', 'Aurelio_Dooley@hotmail.com', 'Powys', '2023-06-20 11:02:29', 1454);
+```
+##### Existing Content
+```sql
+INSERT INTO Content (id, user_id, type, text, external_link, date)
+VALUES
+-- Yasmine's Content
+('f8c08030-2f35-407f-a11f-dc18804b304a', '3BBA9C78-AFB6-4002-BAB5-805CDBE562C8', 'bellicus', 'Corrumpo volo voluptates.',
+ 'https://spherical-alpha.biz/', '2024-02-16 23:16:43'),
+-- Julia's Content
+('fe949d58-30a5-4ffa-bafc-306073c3b820', '8BABF01F-CFEB-4D9E-B41F-723277CBF0F1', 'talus', 'Officiis absconditus ustilo cometes repudiandae.',
+ 'https://lovely-stockings.com/', '2024-02-17 06:05:29'),
+-- Aurelio's Content
+('d7b0392c-16c8-49d3-a2a5-7d2946c9e782', 'F65337B8-2D73-4269-AB74-C25BAC081001', 'audentia', 'Vomer temperantia vilitas.',
+ 'https://thunderous-coverall.name/', '2024-02-16 18:01:46'),
+-- Yasmine's Content
+('6b695978-b999-4126-9e16-5d35dd5d79ef', '8BABF01F-CFEB-4D9E-B41F-723277CBF0F1', 'adicio', 'Universe ultra cultura fuga autem thesaurus iusto.',
+ 'https://radiant-extension.biz/', '2024-02-17 02:49:19');
+```
+##### Existing Segments
+```sql
+INSERT INTO Segments (id, name)
+VALUES
+('791f9657-9e44-4fe2-8b2e-776bcdbcafad', 'Segment A'),
+('ed24c53d-46f0-4c54-9174-891e87b5ee4a', 'Segment B');
+```
+##### Existing Recommendations
+```sql
+INSERT INTO Recommendations (id, content_id, segment_id)
+VALUES
+-- Recommendations for Julia's Content (this will be deleted)
+('c591fb3d-f08f-43cf-844e-4361c01865df', 'fe949d58-30a5-4ffa-bafc-306073c3b820',  '791f9657-9e44-4fe2-8b2e-776bcdbcafad'),
+-- Recommendations for Julia's Content (this will be deleted)
+('57446975-00c0-4266-b348-cd0ac1c19649', 'fe949d58-30a5-4ffa-bafc-306073c3b820',  'ed24c53d-46f0-4c54-9174-891e87b5ee4a'),
+-- Recommendations for Aurelio's Content
+('b60966dc-c5f1-4d8c-a0fe-d210632d5ade', 'd7b0392c-16c8-49d3-a2a5-7d2946c9e782', '791f9657-9e44-4fe2-8b2e-776bcdbcafad'),
+-- Recommendations for Julia's Content (this will be deleted)
+('c04979ce-b122-4dbd-9800-609c7df26216', 'fe949d58-30a5-4ffa-bafc-306073c3b820', 'ed24c53d-46f0-4c54-9174-891e87b5ee4a'),
+-- Recommendations for Aurelio's Content
+('12080b52-cf89-463b-8cf4-a97af0e3e51f', 'd7b0392c-16c8-49d3-a2a5-7d2946c9e782', '791f9657-9e44-4fe2-8b2e-776bcdbcafad'),
+-- Recommendations for Yasmine's Content 1
+('65c89450-0877-4add-9eb2-dbbe18241bd7', 'f8c08030-2f35-407f-a11f-dc18804b304a', 'ed24c53d-46f0-4c54-9174-891e87b5ee4a');
+```
+##### Query
+```sql
+-- Delete Recommendations associated with the user's content (Julia - 8babf01f-cfeb-4d9e-b41f-723277cbf0f1)
+DELETE FROM Recommendations
+WHERE content_id IN (
+    SELECT id FROM Content WHERE user_id = '8babf01f-cfeb-4d9e-b41f-723277cbf0f1'
+);
+```
+
+##### Output for `SELECT * FROM Recommendations`
+| id                                   | content_id                           | segment_id                           |
+| ------------------------------------ | ------------------------------------ | ------------------------------------ |
+| 3814C23E-3BAF-44B3-8E48-26BBD88BC76C | 93AB057D-2733-4470-9134-5AD2733C1883 | F89E4E22-A04A-4779-88FB-3202CC96E72E |
+| 084AB62A-3A5C-4601-B8D4-386C189FB9E6 | 93AB057D-2733-4470-9134-5AD2733C1883 | F89E4E22-A04A-4779-88FB-3202CC96E72E |
+| EB332C7F-64A8-48E8-92E2-6B9292A81439 | DDB0B4EE-8BD9-406F-B0A4-4027763604B3 | 951F7CF2-78DE-4F07-AD08-F40815D5078F |
 
 ### DROP
 
