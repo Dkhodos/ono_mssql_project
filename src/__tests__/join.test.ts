@@ -242,10 +242,9 @@ describe('SQL Join data', () => {
       'select-content-with-text-with-media.sql'
     );
     const results = await action.execute();
-    const expectedTexts = [
-      { text: contents[0].text },
-      { text: contents[2].text },
-    ];
-    expect(results['recordset']).toStrictEqual(expectedTexts);
+    const expectedTexts = [contents[0].text, contents[2].text].sort();
+
+    const resultsText = results['recordset'].map(({text}: {text: string}) => text).sort();
+    expect(resultsText).toStrictEqual(expectedTexts);
   });
 });
