@@ -103,6 +103,7 @@ This process facilitates connecting to your MSSQL instance.
 
 ### Running Tests
 **Note**: Docker must be running for the tests to work!
+
 Execute the tests using the following command for a UI interface:
 ```shell
 yarn test:ui
