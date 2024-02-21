@@ -1,4 +1,4 @@
-# Rational Algebra with SQL
+# Rational Algebra with SQL | Part 2
 
 ## Introduction
 
