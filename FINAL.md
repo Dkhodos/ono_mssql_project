@@ -9,7 +9,7 @@
 
 - DB: Using docker with MS Azure official image: [mcr.microsoft.com/azure-sql-edge]("https://hub.docker.com/_/microsoft-azure-sql-edge")
 - Tested using MS SQL official Node.js library: [mssql]("https://www.npmjs.com/package/mssql")
-- Source: https://github.com/Dkhodos/sql_project
+- Source: <a href="https://github.com/Dkhodos/sql_project" target="_blank">sql_project</a>
 
 ## Tasks
 
