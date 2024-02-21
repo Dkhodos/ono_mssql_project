@@ -2,7 +2,8 @@
 
 ## Introduction
 
-- Some intro here...
+- The is Part 2 of an SQL task for Ono Academic Colladge as PArt of Data strctures class.
+- This SQL Scheme and Queries represent a simple to more complex business flows in Facebook.
 
 ## Tools
 
