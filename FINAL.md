@@ -5,6 +5,7 @@
 - Some intro here...
 
 ## Tools
+
 - DB: Using docker with MS Azure official image: [mcr.microsoft.com/azure-sql-edge]("https://hub.docker.com/_/microsoft-azure-sql-edge")
 - Tested using MS SQL official Node.js library: [mssql]("https://www.npmjs.com/package/mssql")
 - Source: https://github.com/Dkhodos/sql_project
@@ -152,6 +153,7 @@ VALUES
 ```
 
 ##### Output for running Output for running `SELECT * FROM Content`
+
 | id                                   | user_id                              | type | text                                                                                                         | external_link                                    | date                     |
 | ------------------------------------ | ------------------------------------ | ---- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | ------------------------ |
 | AAAC36FF-62B4-463F-8521-259D840A9D6D | A20D6D3F-6989-4943-8112-9A8FFCC86280 | Post | Martial Arts Training Tips                                                                                   | https://martialarts.example.com                  | 2024-02-14T23:31:09.293Z |
@@ -161,6 +163,7 @@ VALUES
 | 225A3539-4DFC-4182-A0ED-D36E0D08A426 | 26102B74-F154-4592-97FF-A3255C9266B5 | Ad   | How to become a pop start...                                                                                 | www.totally-real-madona.xyz                      | 2024-02-14T23:31:09.293Z |
 
 ##### Output for running Output for running `SELECT * FROM Media`
+
 | id                                   | content_id                           | media_type | url                                                        |
 | ------------------------------------ | ------------------------------------ | ---------- | ---------------------------------------------------------- |
 | 0FC28344-8FBF-48E6-8458-90EAC04375B5 | 28D7A6E2-0029-4EE9-A5D1-79593DA7420B | Video      | https://meta.com/video/chuck-media                         |
@@ -201,9 +204,15 @@ VALUES
 | 9485B8DB-BE44-4131-99F2-F90C4025DE46 | 402C3EE9-DCEA-4073-9616-4AF99D518764 | Share   |                   | discovery | 0          | 2024-02-14T20:59:16.163Z |
 
 ### SELECT
+
 #### 1. Select Users by friend count (Simple Where Query)
+
 ##### Existing Users
+
 ```sql
+-- Inserts new rows into the Users table with specified values for each column.
+-- NEWID() function generates a unique identifier for each user.
+-- Values provided are for columns: id, email, demographic, date_of_birth, and friend_count.
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
 (NEWID(), 'Chelsea.Corkery21@hotmail.com', 'Tayside', '2023-12-02 04:15:03', 15),
@@ -212,14 +221,19 @@ VALUES
 (NEWID(), 'Alayna_Haley84@yahoo.com', 'Devon', '2023-10-22 22:37:06', 7),
 (NEWID(), 'Jed_Ortiz89@gmail.com', 'Dorset', '2023-12-06 17:27:41', 400);
 ```
+
 ##### Query
+
 ```sql
+-- Selects the email and id columns from the Users table.
+-- Filters the results to only include users with a friend_count greater than 10.
 SELECT email, id
 FROM Users
 WHERE friend_count > 10;
 ```
 
 ##### Output
+
 | email                      | id                                   |
 | -------------------------- | ------------------------------------ |
 | Estelle.OKon66@gmail.com   | 8BABF01F-CFEB-4D9E-B41F-723277CBF0F1 |
@@ -227,8 +241,13 @@ WHERE friend_count > 10;
 | Macey23@yahoo.com          | F65337B8-2D73-4269-AB74-C25BAC081001 |
 
 #### 2. Select Content by type and order by date (ORDER BY/HAVING/GROUP BY/AGGRIGATION)
+
 ##### Existing Users
+
 ```sql
+-- Inserts new user records into the Users table.
+-- Specifies values for each user, including a predefined UUID for id, email, demographic, date_of_birth, and friend_count.
+-- These users are the authors of the content to be inserted next.
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
 (
@@ -254,6 +273,9 @@ VALUES
 ##### Existing Contents
 
 ```sql
+-- Inserts new content records into the Content table.
+-- Each record includes a unique ID for the content, a user_id linking it to the Users table, the type of content (Post, Ad, or Link), the text of the content, an external link, and the date the content was posted.
+-- This setup allows for content to be associated with users and categorized by type and date.
 INSERT INTO Content (id, user_id, type, text, external_link, date)
 VALUES
 (
@@ -303,6 +325,9 @@ VALUES
 ##### Query
 
 ```sql
+-- Selects the text column from the Content table.
+-- Filters the content to only include types 'Post' and 'Ad'.
+-- Orders the results by the date column in ascending order, ensuring the output is chronologically sorted.
 SELECT text
 FROM Content
 WHERE type IN ('Post', 'Ad')
@@ -323,6 +348,8 @@ ORDER BY date;
 ##### Existing Users
 
 ```sql
+-- Inserts new records into the Users table. Each record includes a unique identifier (id), the user's email, demographic information, date of birth, and friend count.
+-- These users are the participants in the interactions recorded in the Interactions table.
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
 (
@@ -348,6 +375,8 @@ VALUES
 ##### Existing Contents
 
 ```sql
+-- Inserts content records into the Content table, including a unique ID, the ID of the user who created the content, the type of content, the text of the content, an external link associated with it, and the date it was posted.
+-- This setup links content items to their creators in the Users table.
 INSERT INTO Content (id, user_id, type, text, external_link, date)
 VALUES
 (
@@ -376,6 +405,9 @@ VALUES
 ##### Existing Interactions
 
 ```sql
+-- Inserts interaction records into the Interactions table. Each record includes the ID of the interacting user, the ID of the content interacted with, the type of interaction, content of the interaction, the source of the interaction,
+-- time spent on the interaction, and the date of the interaction.
+-- This information tracks how users engage with content, including the duration and origin of the interaction.
 INSERT INTO Interactions (user_id, content_id, type, content, source, time_spent, date)
 VALUES
 (
@@ -415,6 +447,10 @@ VALUES
 ##### Query
 
 ```sql
+-- Selects the user_id and time_spent columns from the Interactions table.
+-- Filters the records to only include interactions that originated from the 'discovery' source
+-- and where the time spent is greater than 100 seconds.
+-- This query identifies users who have spent a significant amount of time on content discovered through a specific source.
 SELECT user_id, time_spent
 FROM Interactions
 WHERE source = 'discovery' AND time_spent > 100;
@@ -432,6 +468,9 @@ WHERE source = 'discovery' AND time_spent > 100;
 ##### Existing Users
 
 ```sql
+-- Inserts new records into the Users table with predefined values.
+-- Each record includes a unique id, email, demographic, date of birth, and friend count.
+-- These users are meant to represent individuals who can interact with content within the database.
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
 (
@@ -457,6 +496,9 @@ VALUES
 ##### Existing Contents
 
 ```sql
+-- Inserts content records into the Content table.
+-- Each record includes a unique content id, the id of the user who created the content, the content's type, text, an external link, and the date it was posted.
+-- This setup allows for a variety of content types to be tracked along with their creators.
 INSERT INTO Content (id, user_id, type, text, external_link, date)
 VALUES
 (
@@ -485,6 +527,9 @@ VALUES
 ##### Existing Interactions
 
 ```sql
+-- Inserts interaction records into the Interactions table.
+-- Each record includes the user_id of the interacting user, the content_id of the content interacted with, the type of interaction, content of the interaction, the source of the interaction, time spent on the interaction, and the interaction date.
+-- These records are used to track how users engage with content, including the medium of discovery and duration.
 INSERT INTO Interactions (user_id, content_id, type, content, source, time_spent, date)
 VALUES
 (
@@ -548,6 +593,11 @@ VALUES
 ##### Query
 
 ```sql
+-- Selects the user_id and the total count of interactions for each user from the Interactions table.
+-- Groups the results by user_id to aggregate the count of interactions per user.
+-- Filters the groups to only include those where the count of interactions exceeds 2.
+-- Orders the results by totalInteractions in descending order to show users with the most interactions first.
+-- This query is useful for identifying highly active users based on their interaction count.
 SELECT user_id, COUNT(*) as totalInteractions
 FROM Interactions
 GROUP BY user_id
@@ -567,6 +617,9 @@ ORDER BY totalInteractions DESC;
 ##### Existing Users
 
 ```sql
+-- Inserts new records into the Users table.
+-- Each record is defined with specific fields: id, email, demographic, date of birth, and friend count.
+-- These records represent the users who can create content within the system.
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
 (
@@ -586,6 +639,9 @@ VALUES
 ##### Existing Contents
 
 ```sql
+-- Inserts new content records into the Content table.
+-- Each content record includes an id, user_id (linking it to the creator), type of content, text content, an external link, and the date it was created.
+-- This is used to track the content created by users and categorize it by type and creation date.
 INSERT INTO Content (id, user_id, type, text, external_link, date)
 VALUES
 (
@@ -614,6 +670,10 @@ VALUES
 ##### Query
 
 ```sql
+-- Selects the user_id and counts the number of contents created by each user from the Content table.
+-- Groups the result by user_id to aggregate the count of content per user.
+-- Applies a HAVING clause to filter out users who have created more than 1 piece of content.
+-- This query is useful for identifying active content creators within the system.
 SELECT user_id, COUNT(user_id) AS NumberOfContents
 FROM Content
 GROUP BY user_id
@@ -631,6 +691,9 @@ HAVING COUNT(user_id) > 1;
 ##### Existing Users
 
 ```sql
+-- Inserts new user records into the Users table.
+-- Each record includes the user's id, email, demographic information, date of birth, and friend count.
+-- These users are the authors or creators of the content to be inserted next.
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
 (
@@ -650,6 +713,9 @@ VALUES
 ##### Existing Contents
 
 ```sql
+-- Inserts content records into the Content table.
+-- Each record specifies a unique content id, the id of the user who created the content, the content type, the textual content, an external link related to the content, and the content creation date.
+-- This allows for tracking of content by its creators and categorizing it by type and creation time.
 INSERT INTO Content (id, user_id, type, text, external_link, date)
 VALUES
 (
@@ -678,6 +744,10 @@ VALUES
 ##### Query
 
 ```sql
+-- Selects all columns from the Content table.
+-- Applies a condition to only include content where the length of the text exceeds 10 characters.
+-- Orders the results by the length of the text in descending order, showing longer texts first.
+-- This query is used to identify and prioritize content with more substantial text content, potentially indicating more detailed or comprehensive information.
 SELECT *
 FROM Content
 WHERE LEN(text) > 10
@@ -696,6 +766,8 @@ ORDER BY LEN(text) DESC;
 ##### Existing Users
 
 ```sql
+-- Inserts records into the Users table, specifying each user's unique id, email, demographic, date of birth, and friend count.
+-- These users are the content creators and interactors within the system.
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
 (
@@ -721,6 +793,7 @@ VALUES
 ##### Existing Contents
 
 ```sql
+-- Inserts records into the Content table, linking each piece of content to a user via user_id, and detailing the content's type, text, external link, and creation date.
 INSERT INTO Content (id, user_id, type, text, external_link, date)
 VALUES
 (
@@ -749,6 +822,8 @@ VALUES
 ##### Existing Tags
 
 ```sql
+-- Inserts records into the Tags table, each with a unique id and name.
+-- Tags are used to categorize content further, allowing for more nuanced content discovery and organization.
 INSERT INTO Tags (id, name)
 VALUES
 (
@@ -765,6 +840,8 @@ VALUES
 ##### Existing Content Tags
 
 ```sql
+-- Inserts relationships between content and tags into the Content_Tags table.
+-- This table links content to one or more tags, enriching the content's metadata and facilitating filtered searches based on tags.
 INSERT INTO Content_Tags (content_id, tag_id)
 VALUES
 (
@@ -787,6 +864,8 @@ VALUES
 ##### Existing Interactions
 
 ```sql
+-- Inserts records into the Interactions table, specifying the user involved, the content interacted with, the type of interaction, content description, source, time spent, and date of interaction.
+-- These interactions are critical for understanding user engagement with the content.
 INSERT INTO Interactions (user_id, content_id, type, content, source, time_spent, date)
 VALUES
 (
@@ -818,6 +897,10 @@ VALUES
 ##### Query
 
 ```sql
+-- Selects the dates of interactions from the Interactions table.
+-- Left joins a subquery that counts tags for each content item, enabling filtering based on the number of tags a content item has.
+-- The WHERE clause filters interactions to those of type 'Like' or where the associated content has more than one tag.
+-- This query is used to identify specific interaction dates based on the interaction type and the richness of content categorization through tagging.
 SELECT I.date
 FROM Interactions I
 LEFT JOIN (
@@ -840,6 +923,8 @@ WHERE I.type = 'Like' OR CT.TagCount > 1;
 ##### Existing Users
 
 ```sql
+-- Inserts records into the Users table. Each record specifies a user's unique id, email, demographic information,
+-- date of birth, and friend count, representing the system's user base capable of creating content.
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
 (
@@ -865,6 +950,7 @@ VALUES
 ##### Existing Content
 
 ```sql
+-- Inserts records into the Content table, detailing each piece of content's id, creator (user_id), type, textual content, an external link, and the date of creation, establishing a catalog of content within the system.
 INSERT INTO Content (id, user_id, type, text, external_link, date)
 VALUES
 (
@@ -893,6 +979,8 @@ VALUES
 ##### Existing Tags
 
 ```sql
+-- Inserts tag records into the Tags table. Each record is given a unique id and a name.
+-- Tags are utilized to categorize content more granularly, enhancing content discovery and organization within the system.
 INSERT INTO Tags (id, name)
 VALUES
 (
@@ -909,6 +997,9 @@ VALUES
 ##### Existing Content Tag
 
 ```sql
+-- Inserts relationships between content and tags into the Content_Tags table.
+-- Each entry links a piece of content with a tag, allowing for multiple tags per content.
+-- This structure enriches content metadata and supports complex queries based on tag-based filtering, which enhances content retrieval and relevance.
 INSERT INTO Content_Tags (content_id, tag_id)
 VALUES
 (
@@ -931,11 +1022,13 @@ VALUES
 ##### Query
 
 ```sql
+-- Selects the text of content entries from the Content table that do not have a corresponding media entry in the Media table.
+-- The LEFT JOIN ensures all content is considered, and the WHERE clause filters out content that lacks associated media.
+-- This query is useful for identifying content that may require additional multimedia elements for enhancement.
 SELECT C.text
 FROM Content C
 LEFT JOIN Media M ON C.id = M.content_id
 WHERE M.id IS NULL;
-
 ```
 
 ##### Output
@@ -949,6 +1042,8 @@ WHERE M.id IS NULL;
 ##### Existing Users
 
 ```sql
+-- Inserts new user records into the Users table. Each record specifies a user's id, email, demographic information, date of birth, and friend count.
+-- This data lays the foundation for tracking content creation and interactions within the platform by various users, reflecting a diverse user base.
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
 (
@@ -974,6 +1069,8 @@ VALUES
 ##### Existing Content
 
 ```sql
+-- Inserts records into the Content table, detailing the content's id, the user who created it, the type of content, the content's text, an external link, and the content's creation date.
+-- This establishes a catalog of content that can be further categorized, shared, and interacted with on the platform.
 INSERT INTO Content (id, user_id, type, text, external_link, date)
 VALUES
 (
@@ -1002,6 +1099,8 @@ VALUES
 ##### Existing Tags
 
 ```sql
+-- Inserts tag records into the Tags table. Each tag is identified by a unique id and given a descriptive name.
+-- These tags are intended for categorizing content across the platform, allowing users to filter and search content based on specific topics or themes. Tags help in enhancing the discoverability of content and facilitating more organized content navigation.
 INSERT INTO Tags (id, name)
 VALUES
 (
@@ -1018,6 +1117,9 @@ VALUES
 ##### Existing Content Tag
 
 ```sql
+-- Inserts relationships between content and tags into the Content_Tags table.
+-- relationship connector between the Content and Tags tables. Each entry links a specific piece of content with a tag, allowing for the assignment of multiple tags to a single content item.
+-- This setup enriches the content's metadata, supports advanced filtering capabilities, and improves content discoverability through tag-based searches.
 INSERT INTO Content_Tags (content_id, tag_id)
 VALUES
 (
@@ -1040,6 +1142,8 @@ VALUES
 ##### Query
 
 ```sql
+-- Selects the text of content entries from the Content table that have corresponding media entries in the Media table.
+-- The JOIN operation ensures that only content with associated media is selected, focusing on content that is potentially more engaging due to the presence of multimedia elements.
 SELECT C.text
 FROM Content C
 JOIN Media M ON C.id = M.content_id;
@@ -1053,29 +1157,38 @@ JOIN Media M ON C.id = M.content_id;
 | Cilicium utrimque sequi suggero victoria deripio temporibus vesper.             |
 
 ### Update
-#### Update all users with a "USA" demographic to "United States
+
+#### Update all users with a "USA" demographic to "United States"
+
 ##### Existing Users
+
 ```sql
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
 (NEWID(), 'john.doe@example.com', 'USA', '1985-04-12', 100),
 (NEWID(), 'jane.doe@example.com', 'Canada', '1990-08-24', 150);
 ```
+
 ##### Query
+
 ```sql
 -- Updating demographic from 'USA' to 'United States' for relevant users
 UPDATE Users
 SET demographic = 'United States'
 WHERE demographic = 'USA';
 ```
+
 ##### Output for `SELECT * FROM Users`:
-| id                                   | email                       | demographic   | date_of_birth            | friend_count |
-| ------------------------------------ | --------------------------- | ------------- | ------------------------ |--------------|
-| 0B4AD9ED-2E38-4163-91CF-7E25F46D3868 | john.doe@example.com          | Canada        | 2023-11-03T00:00:00.000Z | 100          |
+
+| id                                   | email                | demographic   | date_of_birth            | friend_count |
+| ------------------------------------ | -------------------- | ------------- | ------------------------ | ------------ |
+| 0B4AD9ED-2E38-4163-91CF-7E25F46D3868 | john.doe@example.com | Canada        | 2023-11-03T00:00:00.000Z | 100          |
 | AC980F43-9B9F-42A5-BB41-97DA45ED0EEE | jane.doe@example.com | United States | 2023-03-27T00:00:00.000Z | 150          |
 
 #### Move a specific recommendation to a new segment
+
 ##### Existing Users
+
 ```sql
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
@@ -1087,7 +1200,9 @@ VALUES
     1631                                    -- Friend Count
 );
 ```
+
 ##### Existing Content
+
 ```sql
 INSERT INTO Content (id, user_id, type, text, external_link, date)
 VALUES
@@ -1100,7 +1215,9 @@ VALUES
     '2024-02-14 05:04:03'                   -- Date
 );
 ```
+
 ##### Existing Segments
+
 ```sql
 INSERT INTO Segments (id, name)
 VALUES
@@ -1113,7 +1230,9 @@ VALUES
     'Segment B'
 );
 ```
+
 ##### Existing Recommendations
+
 ```sql
 INSERT INTO Recommendations (id, content_id, segment_id)
 VALUES
@@ -1123,7 +1242,9 @@ VALUES
     '64EFEF9A-5682-42A9-8894-0A80811738D0'  -- Segment ID (Foreign Key)
 );
 ```
+
 ##### Query
+
 ```sql
 -- Moving a recommendation from 'Segment A' to 'Segment B'
 UPDATE Recommendations
@@ -1132,13 +1253,17 @@ WHERE id = '4dad31c7-049a-4f85-a5c8-1187d8275d01'; -- Specific ID of the recomme
 ```
 
 ##### Output for `SELECT * FROM Recommendations`
+
 | id                                   | content_id                           | segment_id                           |
 | ------------------------------------ | ------------------------------------ | ------------------------------------ |
 | 4DAD31C7-049A-4F85-A5C8-1187D8275D01 | 3C840AAB-2714-4EBC-A8F7-C809C0E87A89 | DCAD39E6-8F67-4D2C-A423-A6E698BA8932 |
 
 ### DELETE
+
 #### Delete all Contents that contain a specific string (Content moderation)
+
 ##### Existing Users
+
 ```sql
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
@@ -1146,12 +1271,14 @@ VALUES
 ('8BABF01F-CFEB-4D9E-B41F-723277CBF0F1',  'Mike99@hotmail.com',  'Wayne County',  '2023-07-24 19:22:12', 4600),
 ('F65337B8-2D73-4269-AB74-C25BAC081001', 'Carlos38@gmail.com', 'Norfolk', '2023-05-28 09:10:57', 242);
 ```
+
 ###### Existing Content
+
 ```sql
 INSERT INTO Content (id, user_id, type, text, external_link, date)
 VALUES
 -- Content that is suppose to stay
-('A2D53DC8-C911-41B9-B853-3EFE93262ED6', '3BBA9C78-AFB6-4002-BAB5-805CDBE562C8', 'acer', 'Content without specific text', 
+('A2D53DC8-C911-41B9-B853-3EFE93262ED6', '3BBA9C78-AFB6-4002-BAB5-805CDBE562C8', 'acer', 'Content without specific text',
  'https://pitiful-league.com',  '2024-02-16 19:19:00'),
 -- Content that is suppose to be deleted
 ('958044E9-1271-456F-9344-885204C87475', '8BABF01F-CFEB-4D9E-B41F-723277CBF0F1', 'vitiosus', 'Content mentioning Hamas',
@@ -1160,21 +1287,27 @@ VALUES
 ('F0BBD4FB-3F94-4718-8178-FF32C2F0B749', 'F65337B8-2D73-4269-AB74-C25BAC081001', 'terebro', 'Another content without specific text',
  'https://lively-migrant.info/', '2024-02-17 10:37:24');
 ```
+
 ##### Query
+
 ```sql
 -- Delete all Content rows that contain the string `Hamas`
 DELETE FROM Content
 WHERE text LIKE '%Hamas%';
 
 ```
+
 ##### Output for `SELECT id FROM Content`
+
 | id                                   | user_id                              | type    | text                                  | external_link                        | date                     |
 | ------------------------------------ | ------------------------------------ | ------- | ------------------------------------- | ------------------------------------ | ------------------------ |
 | A2D53DC8-C911-41B9-B853-3EFE93262ED6 | 3BBA9C78-AFB6-4002-BAB5-805CDBE562C8 | ancilla | Content without specific text         | https://scarce-butter.com/           | 2024-02-17T07:14:28.000Z |
 | F0BBD4FB-3F94-4718-8178-FF32C2F0B749 | F65337B8-2D73-4269-AB74-C25BAC081001 | cubo    | Another content without specific text | https://motionless-negotiation.info/ | 2024-02-17T11:31:20.000Z |
 
 #### Delete all RRecommendations linked to a specific user
+
 ##### Existing users
+
 ```sql
 INSERT INTO Users (id, email, demographic, date_of_birth, friend_count)
 VALUES
@@ -1185,7 +1318,9 @@ VALUES
 -- Keep Recommendations for Aurelio
 ('F65337B8-2D73-4269-AB74-C25BAC081001', 'Aurelio_Dooley@hotmail.com', 'Powys', '2023-06-20 11:02:29', 1454);
 ```
+
 ##### Existing Content
+
 ```sql
 INSERT INTO Content (id, user_id, type, text, external_link, date)
 VALUES
@@ -1202,14 +1337,18 @@ VALUES
 ('6b695978-b999-4126-9e16-5d35dd5d79ef', '8BABF01F-CFEB-4D9E-B41F-723277CBF0F1', 'adicio', 'Universe ultra cultura fuga autem thesaurus iusto.',
  'https://radiant-extension.biz/', '2024-02-17 02:49:19');
 ```
+
 ##### Existing Segments
+
 ```sql
 INSERT INTO Segments (id, name)
 VALUES
 ('791f9657-9e44-4fe2-8b2e-776bcdbcafad', 'Segment A'),
 ('ed24c53d-46f0-4c54-9174-891e87b5ee4a', 'Segment B');
 ```
+
 ##### Existing Recommendations
+
 ```sql
 INSERT INTO Recommendations (id, content_id, segment_id)
 VALUES
@@ -1226,7 +1365,9 @@ VALUES
 -- Recommendations for Yasmine's Content 1
 ('65c89450-0877-4add-9eb2-dbbe18241bd7', 'f8c08030-2f35-407f-a11f-dc18804b304a', 'ed24c53d-46f0-4c54-9174-891e87b5ee4a');
 ```
+
 ##### Query
+
 ```sql
 -- Delete Recommendations associated with the user's content (Julia - 8babf01f-cfeb-4d9e-b41f-723277cbf0f1)
 DELETE FROM Recommendations
@@ -1236,6 +1377,7 @@ WHERE content_id IN (
 ```
 
 ##### Output for `SELECT * FROM Recommendations`
+
 | id                                   | content_id                           | segment_id                           |
 | ------------------------------------ | ------------------------------------ | ------------------------------------ |
 | 3814C23E-3BAF-44B3-8E48-26BBD88BC76C | 93AB057D-2733-4470-9134-5AD2733C1883 | F89E4E22-A04A-4779-88FB-3202CC96E72E |
